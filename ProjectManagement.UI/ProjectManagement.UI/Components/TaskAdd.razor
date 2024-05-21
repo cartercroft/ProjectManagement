@@ -1,0 +1,16 @@
+﻿@inject ProjectManagement.Clients.ProjectTaskClient _taskClient
+
+<EditForm Model="Task">
+    <div class="form-group">
+        <label for="taskName">Task Description:</label>
+        <InputTextArea @bind-Value="Task.Description"></InputTextArea>
+    </div>
+</EditForm>
+
+@code {
+    private ProjectManagement.Models.ProjectTask Task = new();
+    private async Task HandleSubmit()
+    {
+        
+    }
+}
