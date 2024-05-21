@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\ProjectManagement.Clients\ProjectManagement.Clients.csproj" />
+    <ProjectReference Include="..\..\ProjectManagement.Public.Models\ProjectManagement.Public.Models.csproj" />
     <ProjectReference Include="..\ProjectManagement.UI.Client\ProjectManagement.UI.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.3" />
   </ItemGroup>

@@ -8,9 +8,9 @@
 </EditForm>
 
 @code {
-    private ProjectManagement.Models.ProjectTask Task = new();
+    private ProjectManagement.Public.Models.ProjectTaskViewModel Task = new();
     private async Task HandleSubmit()
     {
-        
+        _taskClient.SaveProjectTask
     }
 }
