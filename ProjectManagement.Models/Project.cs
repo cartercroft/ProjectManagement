@@ -1,6 +1,6 @@
 ﻿namespace ProjectManagement.Models
 {
-    public class Project
+    public class Project : ModelBase
     {
 
     }

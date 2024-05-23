@@ -1,10 +1,14 @@
+using ProjectManagement.UI;
 using ProjectManagement.UI.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
-    .AddInteractiveWebAssemblyComponents();
+    .AddInteractiveServerComponents();
+
+builder.Services.AddHttpClient();
+builder.Services.AddClients();
 
 var app = builder.Build();
 
@@ -26,7 +30,7 @@ app.UseStaticFiles();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
-    .AddInteractiveWebAssemblyRenderMode()
+    .AddInteractiveServerRenderMode()
     .AddAdditionalAssemblies(typeof(ProjectManagement.UI.Client._Imports).Assembly);
 
 app.Run();

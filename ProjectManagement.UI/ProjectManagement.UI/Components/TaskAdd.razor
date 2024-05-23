@@ -1,16 +1,21 @@
 ﻿@inject ProjectManagement.Clients.ProjectTaskClient _taskClient
 
-<EditForm Model="Task">
+<form class="form">
     <div class="form-group">
         <label for="taskName">Task Description:</label>
         <InputTextArea @bind-Value="Task.Description"></InputTextArea>
     </div>
-</EditForm>
+    <div class="form-group">
+        <label for="taskName">Task Status:</label>
+        <InputText @bind-Value="Task.Status"></InputText>
+    </div>
+    <button type="button" class="btn btn-lg btn-success" @onclick=@(HandleSubmit)>Save</button>
+</form>
 
 @code {
     private ProjectManagement.Public.Models.ProjectTaskViewModel Task = new();
     private async Task HandleSubmit()
     {
-        _taskClient.SaveProjectTask
+        await _taskClient.SaveProjectTask(Task);
     }
 }

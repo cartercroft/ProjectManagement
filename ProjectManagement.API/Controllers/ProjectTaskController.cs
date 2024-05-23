@@ -1,30 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Models;
+using ProjectManagement.Public.Models;
 using ProjectManagement.Services;
 
 namespace ProjectManagement.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ProjectTaskController : ControllerBase
     {
-        private readonly TaskService _taskService;
-        public ProjectTaskController(TaskService taskService)
+        private readonly ProjectTaskService _taskService;
+        public ProjectTaskController(ProjectTaskService taskService)
         {
             _taskService = taskService;
         }
         [HttpGet]
-        public ProjectTask Get(int id)
+        public ProjectTaskViewModel Get(int id)
         {
             return _taskService.Get(id);
         }
         [HttpPost]
-        public void Save(ProjectTask task)
+        public void Save(ProjectTaskViewModel task)
         {
             _taskService.Save(task);
         }
         [HttpPost]
-        public void Delete(ProjectTask task)
+        public void Delete(ProjectTaskViewModel task)
         {
             _taskService.Delete(task);
         }

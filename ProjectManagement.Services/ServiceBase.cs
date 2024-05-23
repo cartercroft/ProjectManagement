@@ -18,22 +18,13 @@ namespace ProjectManagement.Services
             _repository = repository;
             _mapper = mapper;
         }
-
         protected override void PostSave() { }
-
         protected override void PreSave() { }
-
         public override sealed void Save(TViewModel viewModel)
         {
             PreSave();
-            if (viewModel.Id > 0) 
-            {
-                Update(viewModel);
-            }
-            else
-            {
-                Add(viewModel);
-            }
+            var model = _mapper.Map<TDataModel>(viewModel);
+            _repository.Save(model);
             PostSave();
         }
         public override void Delete(TViewModel viewModel)
@@ -41,30 +32,15 @@ namespace ProjectManagement.Services
             var model = MapClientModelToDataModel(viewModel);
             _repository.Delete(model);
         }
-
         public override TViewModel Get(int id)
         {
             var dataModel = _repository.Get(id);
             return _mapper.Map<TViewModel>(dataModel);
         }
-
         public override List<TViewModel> GetAll()
         {
-            throw new NotImplementedException();
+            return _mapper.Map<List<TViewModel>>(_repository.GetAll());
         }
-
-        public override void Add(TViewModel viewModel)
-        {
-            var model = MapClientModelToDataModel(viewModel);
-            _repository.Save(model);
-        }
-
-        public override void Update(TViewModel viewModel)
-        {
-            var model = MapClientModelToDataModel(viewModel);
-            _repository.Save(model);
-        }
-
         protected TDataModel MapClientModelToDataModel(TViewModel model)
         {
             return _mapper.Map<TDataModel>(model);

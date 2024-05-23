@@ -9,12 +9,11 @@ namespace ProjectManagement.Repositories
     public class RepositoryBase<TModel> : IRepository<TModel> where TModel : ModelBase
     {
         private DbContext _dbContext;
-        private DbSet<TModel> _dbSet;
-        public RepositoryBase(DbContext context,
-            DbSet<TModel> dbSet)
+        private readonly DbSet<TModel> _dbSet;
+        public RepositoryBase(DbContext context)
         {
             _dbContext = context;
-            _dbSet = dbSet;   
+            _dbSet = _dbContext.Set<TModel>();
         }
         public virtual void Delete(TModel model)
         {

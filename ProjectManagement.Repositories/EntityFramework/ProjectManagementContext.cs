@@ -7,10 +7,13 @@ namespace ProjectManagement.Repositories
     {
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectTask> ProjectTasks { get; set; }
-        public ProjectManagementContext(){}
+        public ProjectManagementContext(DbContextOptions<ProjectManagementContext> options) : base(options)
+        {
+        
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-
+            options.UseSqlServer("Server=.;Database=ProjectManagement;Trusted_Connection=True;TrustServerCertificate=True;");
         }
     }
 }

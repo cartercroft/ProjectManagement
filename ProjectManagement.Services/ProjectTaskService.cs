@@ -5,9 +5,9 @@ using ProjectManagement.Repositories;
 
 namespace ProjectManagement.Services
 {
-    public class TaskService : ServiceBase<ProjectTaskViewModel, TaskRepository, ProjectTask>
+    public class ProjectTaskService : ServiceBase<ProjectTaskViewModel, ProjectTaskRepository, ProjectTask>
     {
-        public TaskService(TaskRepository taskRepository
+        public ProjectTaskService(ProjectTaskRepository taskRepository
             ,IMapper mapper) : base(taskRepository, mapper)
         {
         }

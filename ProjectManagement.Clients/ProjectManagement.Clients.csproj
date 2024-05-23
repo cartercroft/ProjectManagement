@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ProjectManagement.Classes\ProjectManagement.Classes.csproj" />
     <ProjectReference Include="..\ProjectManagement.Models\ProjectManagement.Models.csproj" />
+    <ProjectReference Include="..\ProjectManagement.Public.Models\ProjectManagement.Public.Models.csproj" />
   </ItemGroup>
 
 </Project>

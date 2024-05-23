@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Repositories;
+using ProjectManagement.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ProjectManagementContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("ProjectManagement")));
+
+//Configure DI stuff for mapper, repos, and services.
+builder.Services.ConfigureAndAddMapper();
+builder.Services.AddRepositories();
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
