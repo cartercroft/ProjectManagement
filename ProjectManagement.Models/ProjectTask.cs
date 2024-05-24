@@ -5,8 +5,9 @@ namespace ProjectManagement.Models
     public class ProjectTask : ModelBase
     {
         [Key]
-        public int Id { get; set; }
-        public string Status { get; set; }
-        public string Description {  get; set; }
+        public string Status { get; set; } = null!;
+        public string Description { get; set; } = null!;
+        public int ProjectId { get; set; }
+        public Project Project { get; set; } = null!;
     }
 }

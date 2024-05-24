@@ -9,8 +9,16 @@
   <ItemGroup>
     <ProjectReference Include="..\..\ProjectManagement.Clients\ProjectManagement.Clients.csproj" />
     <ProjectReference Include="..\..\ProjectManagement.Public.Models\ProjectManagement.Public.Models.csproj" />
-    <ProjectReference Include="..\ProjectManagement.UI.Client\ProjectManagement.UI.Client.csproj" />
+    <PackageReference Include="BuildWebCompiler2022" Version="1.14.10" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.3" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="del $(TargetDir)..\..\..\wwwroot\app.css" />
+  </Target>
 
 </Project>

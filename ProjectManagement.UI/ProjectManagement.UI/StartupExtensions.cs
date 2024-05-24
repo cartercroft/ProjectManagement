@@ -3,7 +3,7 @@ using System.Net.Mime;
 
 namespace ProjectManagement.UI
 {
-    public static class StartupExtentions
+    public static class StartupExtensions
     {
         public static IServiceCollection AddClients(this IServiceCollection services)
         {

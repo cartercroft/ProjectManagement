@@ -15,11 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagement.API", "Pr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagement.Clients", "ProjectManagement.Clients\ProjectManagement.Clients.csproj", "{E55097BA-1D9D-428B-84C2-6929A98A711A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagement.UI", "ProjectManagement.UI\ProjectManagement.UI\ProjectManagement.UI.csproj", "{B2EFCF8D-8F5E-4246-BFE0-280CF6E08F8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagement.UI", "ProjectManagement.UI\ProjectManagement.UI\ProjectManagement.UI.csproj", "{B2EFCF8D-8F5E-4246-BFE0-280CF6E08F8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagement.UI.Client", "ProjectManagement.UI\ProjectManagement.UI.Client\ProjectManagement.UI.Client.csproj", "{5DC13506-E093-482C-B4AF-9D7D2E549662}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagement.Public.Models", "ProjectManagement.Public.Models\ProjectManagement.Public.Models.csproj", "{3F657B54-9891-425F-84F0-8792E73CB971}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagement.Public.Models", "ProjectManagement.Public.Models\ProjectManagement.Public.Models.csproj", "{3F657B54-9891-425F-84F0-8792E73CB971}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,10 +53,6 @@ Global
 		{B2EFCF8D-8F5E-4246-BFE0-280CF6E08F8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2EFCF8D-8F5E-4246-BFE0-280CF6E08F8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2EFCF8D-8F5E-4246-BFE0-280CF6E08F8D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5DC13506-E093-482C-B4AF-9D7D2E549662}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5DC13506-E093-482C-B4AF-9D7D2E549662}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5DC13506-E093-482C-B4AF-9D7D2E549662}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5DC13506-E093-482C-B4AF-9D7D2E549662}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3F657B54-9891-425F-84F0-8792E73CB971}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3F657B54-9891-425F-84F0-8792E73CB971}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F657B54-9891-425F-84F0-8792E73CB971}.Release|Any CPU.ActiveCfg = Release|Any CPU
