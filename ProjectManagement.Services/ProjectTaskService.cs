@@ -7,9 +7,6 @@ namespace ProjectManagement.Services
 {
     public class ProjectTaskService : ServiceBase<ProjectTaskViewModel, ProjectTaskRepository, ProjectTask>
     {
-        public ProjectTaskService(ProjectTaskRepository taskRepository
-            ,IMapper mapper) : base(taskRepository, mapper)
-        {
-        }
+        public ProjectTaskService(ProjectTaskRepository taskRepository ,IMapper mapper) : base(taskRepository, mapper){}
     }
 }
