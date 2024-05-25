@@ -9,6 +9,12 @@
             </button>
           }
     </div>
+    @if (EnableAdding)
+    {
+        <button type="button"
+                class="button_plus"
+                @onclick=@(HandleAddClick)></button>
+    }
     <div class="content">
         <CascadingValue Value="this">
             @ChildContent
@@ -17,13 +23,44 @@
 </div>
 
 @code {
+    [Parameter]
+    public bool EnableAdding { get; set; } = false;
+    [Parameter]
+    public Action OnAdd { get; set; } = null!;
+    [Parameter]
+    public Func<Task> OnAddAsync { get; set; } = null!;
     // Next line is needed so we are able to add <TabPage> components inside
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
     public TabPage ActivePage { get; set; }
     List<TabPage> Pages = new List<TabPage>();
-    
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(EnableAdding 
+            && OnAdd == null
+            && OnAddAsync == null)
+        {
+            throw new ArgumentNullException("Either parameter OnAdd or OnAddAsync must be provided to TabDisplay when EnableAdding is set to true.");
+        }
+        if(OnAdd != null && OnAddAsync != null)
+        {
+            throw new ArgumentException("Only one of OnAdd or OnAddAsync can be provided to TabDisplay. To fix this, remove either OnAdd OR OnAddAsync.");
+        }
+        await base.OnInitializedAsync();
+    }
+    internal async Task HandleAddClick(MouseEventArgs args)
+    {
+        if(OnAdd != null)
+        {
+            await InvokeAsync(OnAdd);
+        }
+        else
+        {
+            await InvokeAsync(OnAddAsync);
+        }
+    }
     internal string GetButtonClass(TabPage page)
     {
         return page == ActivePage ? "active" : "";

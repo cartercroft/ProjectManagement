@@ -3,9 +3,9 @@
 <PageTitle>Home</PageTitle>
 
 <div style="padding: 10px;">
-    <TabDisplay>
+    <TabDisplay EnableAdding OnAddAsync="HandleProjectAdd">
         <TabPage Text="Project1">
-            Project 1
+            <TaskAdd></TaskAdd>
         </TabPage>
         <TabPage Text="Project2">
             Project 2
@@ -15,5 +15,7 @@
 
 
 @code{
-
+    private async Task HandleProjectAdd() {
+        
+    }
 }

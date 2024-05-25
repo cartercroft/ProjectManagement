@@ -12,7 +12,7 @@ using ProjectManagement.Repositories;
 namespace ProjectManagement.Repositories.Migrations
 {
     [DbContext(typeof(ProjectManagementContext))]
-    [Migration("20240523023436_init")]
+    [Migration("20240525072604_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -65,6 +65,9 @@ namespace ProjectManagement.Repositories.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -74,7 +77,25 @@ namespace ProjectManagement.Repositories.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ProjectId");
+
                     b.ToTable("ProjectTasks");
+                });
+
+            modelBuilder.Entity("ProjectManagement.Models.ProjectTask", b =>
+                {
+                    b.HasOne("ProjectManagement.Models.Project", "Project")
+                        .WithMany("Tasks")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("ProjectManagement.Models.Project", b =>
+                {
+                    b.Navigation("Tasks");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProjectManagement.Models;
 using ProjectManagement.Public.Models;
 using ProjectManagement.Services;
 
 namespace ProjectManagement.API.Controllers
 {
-    [Route("api/[controller]/[action]")]
-    [ApiController]
-    public class ProjectTaskController : ControllerBase
+    public class ProjectTaskController : APIControllerBase
     {
         private readonly ProjectTaskService _taskService;
         public ProjectTaskController(ProjectTaskService taskService)

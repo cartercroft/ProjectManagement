@@ -10,7 +10,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<ProjectManagementContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("ProjectManagement")));
+builder.Services.AddDbContext<ProjectManagementContext>(opt => 
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("ProjectManagement"), b => b.MigrationsAssembly("ProjectManagement.Repositories"))    
+);
 
 //Configure DI stuff for mapper, repos, and services.
 builder.Services.ConfigureAndAddMapper();

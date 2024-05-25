@@ -2,13 +2,55 @@ $border-style: 2px solid rgb(139, 128, 0);
 
 .tab-wrapper {
     border-left: $border-style;
-    /*border-top-left-radius: 2px;*/
-    div {
-        width: 100%;
+    position: relative;
+    line-height: 24px;
+    .button_plus {
+        position: absolute;
+        margin: 5.6px 0 0 5.6px;
+        width: 24px;
+        height: 24px;
+        background: #fff;
+        cursor: pointer;
+        border: 2px solid #095776;
+        /* Mittig */
+    }
+
+    .button_plus:after {
+        content: '';
+        position: absolute;
+        transform: translate(-50%, -50%);
+        height: 4px;
+        width: 50%;
+        background: #095776;
+        top: 50%;
+        left: 50%;
+    }
+
+    .button_plus:before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #095776;
+        height: 50%;
+        width: 4px;
+    }
+
+    .button_plus:hover:before,
+    .button_plus:hover:after {
+        background: #fff;
+        transition: 0.2s;
+    }
+
+    .button_plus:hover {
+        background-color: #095776;
+        transition: 0.2s;
     }
 
     .tabs {
-        display: flex;
+        display: inline-flex;
+        width: fit-content;
 
         button {
             border: $border-style;
@@ -23,6 +65,7 @@ $border-style: 2px solid rgb(139, 128, 0);
         .active {
             background-color: rgba(233, 233, 233, .5);
         }
+
         button:not(.active) {
             box-shadow: inset 0 -5px 5px -5px #555;
         }
@@ -31,5 +74,6 @@ $border-style: 2px solid rgb(139, 128, 0);
     .content {
         outline: $border-style;
         border-top: none;
+        width: 100%;
     }
 }

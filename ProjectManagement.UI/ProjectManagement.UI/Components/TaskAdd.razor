@@ -1,14 +1,14 @@
 ﻿@inject ProjectManagement.Clients.ProjectTaskClient _taskClient
 
 <div class="container">
-    <span class="header">Add a new Task</span>
-    <div class="">
-        <label for="taskName">Task Description:</label>
-        <InputTextArea @bind-Value="Task.Description"></InputTextArea>
-    </div>
-    <div class="form-group">
+    <div class="header">Add a new Task</div>
+    <div>
         <label for="taskName">Task Status:</label>
         <InputText @bind-Value="Task.Status"></InputText>
+    </div>
+    <div>
+        <label for="taskName">Task Description:</label>
+        <InputTextArea class="taskDescription" @bind-Value="Task.Description"></InputTextArea>
     </div>
     <button type="button" class="btn btn-lg btn-success" @onclick=@(HandleSubmit)>Save</button>
 </div>

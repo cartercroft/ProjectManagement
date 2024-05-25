@@ -13,23 +13,71 @@ body {
 }
 
 .container {
+  background-color: grey;
   display: flex;
+  flex-wrap: wrap;
+  max-width: 200px;
+  padding: 4px;
+}
+.container textarea {
+  resize: vertical;
+}
+.container input, .container textarea {
+  min-width: 180px;
 }
 .container .header {
-  width: 100%;
+  margin: 0 auto;
   height: 1.5rem;
-  font-size: 3em;
+  font-size: 1.75em;
 }
 
 .tab-wrapper {
   border-left: 2px solid rgb(139, 128, 0);
-  /*border-top-left-radius: 2px;*/
+  position: relative;
+  line-height: 24px;
 }
-.tab-wrapper div {
-  width: 100%;
+.tab-wrapper .button_plus {
+  position: absolute;
+  margin: 5.6px 0 0 5.6px;
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  cursor: pointer;
+  border: 2px solid #095776;
+  /* Mittig */
+}
+.tab-wrapper .button_plus:after {
+  content: "";
+  position: absolute;
+  transform: translate(-50%, -50%);
+  height: 4px;
+  width: 50%;
+  background: #095776;
+  top: 50%;
+  left: 50%;
+}
+.tab-wrapper .button_plus:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #095776;
+  height: 50%;
+  width: 4px;
+}
+.tab-wrapper .button_plus:hover:before,
+.tab-wrapper .button_plus:hover:after {
+  background: #fff;
+  transition: 0.2s;
+}
+.tab-wrapper .button_plus:hover {
+  background-color: #095776;
+  transition: 0.2s;
 }
 .tab-wrapper .tabs {
-  display: flex;
+  display: inline-flex;
+  width: fit-content;
 }
 .tab-wrapper .tabs button {
   border: 2px solid rgb(139, 128, 0);
@@ -49,6 +97,7 @@ body {
 .tab-wrapper .content {
   outline: 2px solid rgb(139, 128, 0);
   border-top: none;
+  width: 100%;
 }
 
-/*# sourceMappingURL=data:application/json;charset=utf-8,%7B%22version%22:3,%22sourceRoot%22:%22%22,%22sources%22:%5B%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/App.scss%22,%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/TaskAdd.razor.scss%22,%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/TabDisplay.razor.scss%22%5D,%22names%22:%5B%5D,%22mappings%22:%22AAAA;EACI;EACA;EACA;EACA;EACA;EACA;EACA;;;AAEJ;EACI;;;ACVH;EACG;;AAEA;EACI;EACA;EACA;;;ACJR;EACI,aAHW;AAIX;;AACA;EACI;;AAGJ;EACI;;AAEA;EACI,QAbG;AAcH;EACA;EACA;EACA;EACA;EACA,eAnBG;;AAsBP;EACI;;AAEJ;EACI;;AAIR;EACI,SA/BO;EAgCP%22%7D */
+/*# sourceMappingURL=data:application/json;charset=utf-8,%7B%22version%22:3,%22sourceRoot%22:%22%22,%22sources%22:%5B%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/App.scss%22,%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/TaskAdd.razor.scss%22,%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/TabDisplay.razor.scss%22%5D,%22names%22:%5B%5D,%22mappings%22:%22AAAA;EACI;EACA;EACA;EACA;EACA;EACA;EACA;;;AAEJ;EACI;;;ACVH;EACG;EACA;EACA;EACA;EACA;;AAEA;EACI;;AAEJ;EACI;;AAEJ;EACI;EACA;EACA;;;ACdR;EACI,aAHW;EAIX;EACA;;AACA;EACI;EACA;EACA;EACA;EACA;EACA;EACA;AACA;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;AAAA;EAEI;EACA;;AAGJ;EACI;EACA;;AAGJ;EACI;EACA;;AAEA;EACI,QAvDG;AAwDH;EACA;EACA;EACA;EACA;EACA,eA7DG;;AAgEP;EACI;;AAGJ;EACI;;AAIR;EACI,SA1EO;EA2EP;EACA%22%7D */

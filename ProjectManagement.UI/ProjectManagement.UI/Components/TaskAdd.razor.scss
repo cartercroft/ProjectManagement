@@ -1,9 +1,19 @@
-﻿.container{
+﻿.container {
+    background-color: grey;
     display: flex;
-    
-    .header{
-        width: 100%;
+    flex-wrap: wrap;
+    max-width: 200px;
+    padding: 4px;
+
+    textarea{
+        resize: vertical;
+    }
+    input, textarea{
+        min-width: 180px;
+    }
+    .header {
+        margin: 0 auto;
         height: 1.5rem;
-        font-size: 3em;
+        font-size: 1.75em;
     }
 }

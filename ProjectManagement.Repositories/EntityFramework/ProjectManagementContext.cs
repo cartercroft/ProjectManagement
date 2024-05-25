@@ -11,6 +11,10 @@ namespace ProjectManagement.Repositories
         {
         
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             options.UseSqlServer("Server=.;Database=ProjectManagement;Trusted_Connection=True;TrustServerCertificate=True;");
