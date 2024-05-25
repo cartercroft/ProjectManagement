@@ -100,4 +100,56 @@ body {
   width: 100%;
 }
 
-/*# sourceMappingURL=data:application/json;charset=utf-8,%7B%22version%22:3,%22sourceRoot%22:%22%22,%22sources%22:%5B%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/App.scss%22,%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/TaskAdd.razor.scss%22,%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/TabDisplay.razor.scss%22%5D,%22names%22:%5B%5D,%22mappings%22:%22AAAA;EACI;EACA;EACA;EACA;EACA;EACA;EACA;;;AAEJ;EACI;;;ACVH;EACG;EACA;EACA;EACA;EACA;;AAEA;EACI;;AAEJ;EACI;;AAEJ;EACI;EACA;EACA;;;ACdR;EACI,aAHW;EAIX;EACA;;AACA;EACI;EACA;EACA;EACA;EACA;EACA;EACA;AACA;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;AAAA;EAEI;EACA;;AAGJ;EACI;EACA;;AAGJ;EACI;EACA;;AAEA;EACI,QAvDG;AAwDH;EACA;EACA;EACA;EACA;EACA,eA7DG;;AAgEP;EACI;;AAGJ;EACI;;AAIR;EACI,SA1EO;EA2EP;EACA%22%7D */
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.dialog {
+  width: 750px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.dialog .dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+}
+
+.dialog .dialog-body {
+  padding: 2rem;
+}
+
+.dialog .dialog-footer {
+  padding: 2rem;
+}
+
+.close {
+  height: 40px;
+  width: 40px;
+  background-color: transparent;
+  transition: 0.25s ease;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.close:hover {
+  background-color: #DDD;
+}
+
+/*# sourceMappingURL=data:application/json;charset=utf-8,%7B%22version%22:3,%22sourceRoot%22:%22%22,%22sources%22:%5B%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/App.scss%22,%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/TaskAdd.razor.scss%22,%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/TabDisplay.razor.scss%22,%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/Dialog.razor.scss%22%5D,%22names%22:%5B%5D,%22mappings%22:%22AAAA;EACI;EACA;EACA;EACA;EACA;EACA;EACA;;;AAEJ;EACI;;;ACVH;EACG;EACA;EACA;EACA;EACA;;AAEA;EACI;;AAEJ;EACI;;AAEJ;EACI;EACA;EACA;;;ACdR;EACI,aAHW;EAIX;EACA;;AACA;EACI;EACA;EACA;EACA;EACA;EACA;EACA;AACA;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;AAAA;EAEI;EACA;;AAGJ;EACI;EACA;;AAGJ;EACI;EACA;;AAEA;EACI,QAvDG;AAwDH;EACA;EACA;EACA;EACA;EACA,eA7DG;;AAgEP;EACI;;AAGJ;EACI;;AAIR;EACI,SA1EO;EA2EP;EACA;;;AC5ER;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;;AAGJ;EACI;EACA;EACA;EACA;;;AAGJ;EACI;EACA;EACA;EACA;;;AAGJ;EACI;;;AAGJ;EACI;;;AAIJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;;AAGJ;EACI%22%7D */

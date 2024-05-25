@@ -13,9 +13,19 @@
     </TabDisplay>
 </div>
 
+<Dialog @bind-Opened=@(DialogOpened)>
+    <BodyContent>
+        Test Body
+    </BodyContent>
+    <FooterContent>
+        Test Footer
+    </FooterContent>
+</Dialog>
 
 @code{
+    private bool DialogOpened = false;
     private async Task HandleProjectAdd() {
-        
+        DialogOpened = true;
+        await InvokeAsync(StateHasChanged);
     }
 }
