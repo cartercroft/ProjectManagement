@@ -1,17 +1,20 @@
-﻿<div>This is a TabControl</div>
-<div class="tabs">
-    @foreach (TabPage tabPage in Pages)
-      {
-        <button type="button"
-          class="@GetButtonClass(tabPage)"
-          @onclick=@(() => ActivatePage(tabPage))>
-          @tabPage.Text
-        </button>
-      }
+﻿<div class="tab-wrapper">
+    <div class="tabs">
+        @foreach (TabPage tabPage in Pages)
+          {
+            <button type="button"
+              class="@GetButtonClass(tabPage) no-style"
+              @onclick=@(() => ActivatePage(tabPage))>
+              @tabPage.Text
+            </button>
+          }
+    </div>
+    <div class="content">
+        <CascadingValue Value="this">
+            @ChildContent
+        </CascadingValue>
+    </div>
 </div>
-<CascadingValue Value="this">
-    @ChildContent
-</CascadingValue>
 
 @code {
     // Next line is needed so we are able to add <TabPage> components inside

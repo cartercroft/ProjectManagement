@@ -1,4 +1,18 @@
-﻿.container {
+﻿button.no-style {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+body {
+  margin: 0;
+}
+
+.container {
   display: flex;
 }
 .container .header {
@@ -7,18 +21,34 @@
   font-size: 3em;
 }
 
-.tabs {
+.tab-wrapper {
+  border-left: 2px solid rgb(139, 128, 0);
+  /*border-top-left-radius: 2px;*/
+}
+.tab-wrapper div {
+  width: 100%;
+}
+.tab-wrapper .tabs {
   display: flex;
 }
-.tabs button {
-  margin-right: 0.25em;
+.tab-wrapper .tabs button {
+  border: 2px solid rgb(139, 128, 0);
+  /*border-radius: 2px 2px 0 0;*/
+  border-bottom: none;
+  border-left: none;
+  padding: 0.25rem 0.1rem;
+  border-left: none;
+  border-bottom: 2px solid rgb(139, 128, 0);
 }
-.tabs .active {
+.tab-wrapper .tabs .active {
   background-color: rgba(233, 233, 233, 0.5);
 }
-
-.butthole {
-  color: brown;
+.tab-wrapper .tabs button:not(.active) {
+  box-shadow: inset 0 -5px 5px -5px #555;
+}
+.tab-wrapper .content {
+  outline: 2px solid rgb(139, 128, 0);
+  border-top: none;
 }
 
-/*# sourceMappingURL=data:application/json;charset=utf-8,%7B%22version%22:3,%22sourceRoot%22:%22%22,%22sources%22:%5B%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/TaskAdd.razor.scss%22,%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/TabDisplay.razor.scss%22%5D,%22names%22:%5B%5D,%22mappings%22:%22AAAC;EACG;;AAEA;EACI;EACA;EACA;;;ACNR;EACI;;AACA;EACI;;AAEJ;EACI;;;AAGR;EACI%22%7D */
+/*# sourceMappingURL=data:application/json;charset=utf-8,%7B%22version%22:3,%22sourceRoot%22:%22%22,%22sources%22:%5B%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/App.scss%22,%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/TaskAdd.razor.scss%22,%22file:///C:/Users/Student/source/repos/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/TabDisplay.razor.scss%22%5D,%22names%22:%5B%5D,%22mappings%22:%22AAAA;EACI;EACA;EACA;EACA;EACA;EACA;EACA;;;AAEJ;EACI;;;ACVH;EACG;;AAEA;EACI;EACA;EACA;;;ACJR;EACI,aAHW;AAIX;;AACA;EACI;;AAGJ;EACI;;AAEA;EACI,QAbG;AAcH;EACA;EACA;EACA;EACA;EACA,eAnBG;;AAsBP;EACI;;AAEJ;EACI;;AAIR;EACI,SA/BO;EAgCP%22%7D */
