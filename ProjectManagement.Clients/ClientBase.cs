@@ -35,8 +35,11 @@ namespace ProjectManagement.Clients
                 HandleFailedRequest(result);
             }
         }
-
-        public async Task<TResponse> GetAsync<TResponse>(string endpoint, Dictionary<string, object> pathParameters)
+        public async Task<TResponse> GetAsync<TResponse>(string endpoint)
+        {
+            return await GetAsync<TResponse>(endpoint, null);
+        }
+        public async Task<TResponse> GetAsync<TResponse>(string endpoint, Dictionary<string, object>? pathParameters)
         {
             var result = await _client.GetAsync($"{endpoint}{GetPathParametersAsString(pathParameters)}");
             if (!result.IsSuccessStatusCode)
@@ -54,8 +57,13 @@ namespace ProjectManagement.Clients
             TResponse response = JsonConvert.DeserializeObject<TResponse>(responseBody);
             return response;
         }
-        private string GetPathParametersAsString(Dictionary<string, object> pathParameters)
+        private string GetPathParametersAsString(Dictionary<string, object>? pathParameters)
         {
+            if(pathParameters == null)
+            {
+                return "";
+            }
+
             StringBuilder builder = new StringBuilder();
             for(int i = 0; i < pathParameters.Count; i++) 
             {
@@ -72,7 +80,7 @@ namespace ProjectManagement.Clients
         }
         private void HandleFailedRequest(HttpResponseMessage httpResponseMessage)
         {
-            throw new HttpRequestException($"Error calling {httpResponseMessage.RequestMessage.RequestUri}");
+            throw new HttpRequestException($"Error calling {httpResponseMessage.RequestMessage.RequestUri}\n\nError: {httpResponseMessage.ReasonPhrase}");
         }
     }
 }

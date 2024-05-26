@@ -5,12 +5,26 @@
     max-width: 200px;
     padding: 4px;
 
-    textarea{
-        resize: vertical;
+    textarea {
+        resize: none;
+        overflow-y: scroll;
+        height: 225px;
     }
-    input, textarea{
+
+    input, textarea {
         min-width: 180px;
     }
+    /*#region textarea scrollbar*/
+    textarea::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    textarea::-webkit-scrollbar-thumb {
+        background-color: gray;
+        border-radius: 5px;
+        padding-right: 15px;
+    }
+    /*#endregion textarea scrollbar*/
     .header {
         margin: 0 auto;
         height: 1.5rem;

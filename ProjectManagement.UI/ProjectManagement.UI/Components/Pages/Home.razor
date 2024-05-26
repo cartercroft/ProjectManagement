@@ -1,31 +1,41 @@
 ﻿@page "/"
+@inject ProjectClient _projectClient
 
 <PageTitle>Home</PageTitle>
 
 <div style="padding: 10px;">
     <TabDisplay EnableAdding OnAddAsync="HandleProjectAdd">
-        <TabPage Text="Project1">
-            <TaskAdd></TaskAdd>
-        </TabPage>
-        <TabPage Text="Project2">
-            Project 2
-        </TabPage>
+        @foreach(var project in Projects)
+        {
+            <TabPage Text="@project.Name">
+                @foreach(var task in project.Tasks)
+                {
+                    <div>
+                        @task.Status
+                    </div>
+                    <p>
+                      @task.Description  
+                    </p>
+                }
+            </TabPage>
+        }
     </TabDisplay>
 </div>
 
-<Dialog @bind-Opened=@(DialogOpened)>
-    <BodyContent>
-        Test Body
-    </BodyContent>
-    <FooterContent>
-        Test Footer
-    </FooterContent>
-</Dialog>
-
+<ProjectEdit @bind-Opened=@(DialogOpened) SaveCallback="Refresh"></ProjectEdit>
 @code{
+    private List<ProjectViewModel> Projects = new();
     private bool DialogOpened = false;
+    protected override async Task OnInitializedAsync()
+    {
+        Projects = await _projectClient.GetAll();
+    }
     private async Task HandleProjectAdd() {
         DialogOpened = true;
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task Refresh()
+    {
         await InvokeAsync(StateHasChanged);
     }
 }

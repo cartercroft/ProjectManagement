@@ -4,7 +4,16 @@
     <div class="header">Add a new Task</div>
     <div>
         <label for="taskName">Task Status:</label>
-        <InputText @bind-Value="Task.Status"></InputText>
+        <InputSelect @bind-Value=@(Task.Status)>
+            @if (string.IsNullOrEmpty(Task.Status))
+            {
+                <option disabled selected>Select...</option>
+            }
+            @foreach(string status in StatusList)
+            {
+                <option value="@status">@status</option>
+            }
+        </InputSelect>
     </div>
     <div>
         <label for="taskName">Task Description:</label>
@@ -14,9 +23,33 @@
 </div>
 
 @code {
+    private List<string> StatusList = null!;
     private ProjectManagement.Public.Models.ProjectTaskViewModel Task = new();
+    protected override async Task OnInitializedAsync()
+    {
+        if(StatusList == null)
+        {
+            StatusList = new List<string>();
+            foreach(var status in Enum.GetNames(typeof(TaskStatus)))
+            {
+                StatusList.Add(status);
+            }
+        }
+        await base.OnInitializedAsync();
+    }
+    private async Task HandleStatusChange(EventArgs args)
+    {
+        Task.Status = args.ToString();
+        await InvokeAsync(StateHasChanged);
+    }
     private async Task HandleSubmit()
     {
         await _taskClient.SaveProjectTask(Task);
+    }
+    private enum TaskStatus
+    {
+        ToDo,
+        InProgress,
+        Completed
     }
 }

@@ -21,12 +21,14 @@ namespace ProjectManagement.API
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<ProjectTaskRepository>();
+            services.AddScoped<ProjectRepository>();
             
             return services;
         }
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<ProjectTaskService>();
+            services.AddScoped<ProjectService>();
 
             return services;
         }

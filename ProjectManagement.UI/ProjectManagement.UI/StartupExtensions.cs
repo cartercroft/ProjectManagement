@@ -8,6 +8,7 @@ namespace ProjectManagement.UI
         public static IServiceCollection AddClients(this IServiceCollection services)
         {
             services.AddScoped<ProjectTaskClient>();
+            services.AddScoped<ProjectClient>();
 
             return services;
         }

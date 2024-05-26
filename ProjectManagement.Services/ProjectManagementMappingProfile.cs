@@ -8,6 +8,7 @@ namespace ProjectManagement.Services
         public ProjectManagementMappingProfile()
         {
             CreateMap<ProjectTask, ProjectTaskViewModel>().ReverseMap();
+            CreateMap<Project, ProjectViewModel>().ReverseMap();
         }
     }
 }
