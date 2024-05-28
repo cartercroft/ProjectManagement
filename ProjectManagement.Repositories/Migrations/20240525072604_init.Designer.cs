@@ -12,8 +12,8 @@ using ProjectManagement.Repositories;
 namespace ProjectManagement.Repositories.Migrations
 {
     [DbContext(typeof(ProjectManagementContext))]
-    [Migration("20240525072604_init")]
-    partial class init
+    [Migration("20240525072604_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

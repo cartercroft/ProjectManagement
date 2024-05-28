@@ -1,26 +1,18 @@
 ﻿@inject ProjectClient _client
 
-<Dialog Opened=@(Opened) OpenedChanged="OpenedChanged">
-    <BodyContent>
         <div>
             <label>Project Name:</label>
             <InputText @bind-Value=@(Project.Name) />
         </div>
-    </BodyContent>
-    <FooterContent>
         <button type="button" @onclick=@(HandleSaveClick)>Save</button>
-    </FooterContent>
-</Dialog>
 
 @code {
-    [Parameter]
-    public bool Opened { get; set; }
-    [Parameter]
-    public EventCallback<bool> OpenedChanged { get; set; }
+
+
     [Parameter]
     public ProjectViewModel Project { get; set; } = null!;
     [Parameter]
-    public Func<Task> SaveCallback { get; set; }
+    public Func<Task> SaveCallback { get; set; } = null!;
     protected override async Task OnInitializedAsync()
     {
         if(Project == null)
@@ -32,7 +24,7 @@
 
     internal async Task HandleSaveClick(MouseEventArgs args)
     {
-        await _client.SaveProject(Project);
-        await InvokeAsync(SaveCallback);
+        await _client.Save(Project);
+        await SaveCallback();
     }
 }

@@ -59,7 +59,7 @@ namespace ProjectManagement.Repositories
         }
         public virtual List<TModel> GetAll()
         {
-            return _dbSet.ToList();
+            return _dbSet.Any() ? _dbSet.ToList() : new List<TModel>();
         }
         private int GetModelKey(TModel model)
         {

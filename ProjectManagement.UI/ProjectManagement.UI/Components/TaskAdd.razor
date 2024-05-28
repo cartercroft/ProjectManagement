@@ -44,7 +44,7 @@
     }
     private async Task HandleSubmit()
     {
-        await _taskClient.SaveProjectTask(Task);
+        await _taskClient.Save(Task);
     }
     private enum TaskStatus
     {

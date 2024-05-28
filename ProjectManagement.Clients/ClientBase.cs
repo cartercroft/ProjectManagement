@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ProjectManagement.Classes;
 using System.Net.Mime;
 using System.Text;
 
@@ -12,43 +13,53 @@ namespace ProjectManagement.Clients
             _client = client;
         }
 
-        public async Task<TResponse> PostAsync<TResponse>(string endpoint, object bodyContent)
+        public async Task<Response<TResponse>> PostAsync<TResponse>(string endpoint, object bodyContent)
         {
-            string body = JsonConvert.SerializeObject(bodyContent);
-            HttpContent content = new StringContent(body);
+            HttpContent content = GetHttpContent(bodyContent);
             var result = await _client.PostAsync(endpoint, content);
+            Response<TResponse> response = new Response<TResponse>();
             if (!result.IsSuccessStatusCode)
             {
-                HandleFailedRequest(result);
+                response.ErrorMessage = GetRequestErrorMessage(result);
             }
-            return await GetResponseObject<TResponse>(result);
+            else
+            {
+                response.Result = await GetResponseObject<TResponse>(result);
+            }
+            return response;
         }
 
-        public async Task PostAsync(string endpoint, object bodyContent)
+        public async Task<Response> PostAsync(string endpoint, object bodyContent)
         {
-            string body = JsonConvert.SerializeObject(bodyContent);
-            HttpContent content = new StringContent(body);
-            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(MediaTypeNames.Application.Json);
+            HttpContent content = GetHttpContent(bodyContent);
             var result = await _client.PostAsync(endpoint, content);
+
+            Response response = new Response();
             if (!result.IsSuccessStatusCode)
             {
-                HandleFailedRequest(result);
+                response.ErrorMessage = GetRequestErrorMessage(result);
             }
+            return response;
         }
-        public async Task<TResponse> GetAsync<TResponse>(string endpoint)
+        public async Task<Response<TResponse>> GetAsync<TResponse>(string endpoint)
         {
             return await GetAsync<TResponse>(endpoint, null);
         }
-        public async Task<TResponse> GetAsync<TResponse>(string endpoint, Dictionary<string, object>? pathParameters)
+        public async Task<Response<TResponse>> GetAsync<TResponse>(string endpoint, Dictionary<string, object>? pathParameters)
         {
             var result = await _client.GetAsync($"{endpoint}{GetPathParametersAsString(pathParameters)}");
+            Response<TResponse> response = new Response<TResponse>();
             if (!result.IsSuccessStatusCode)
             {
-                HandleFailedRequest(result);
+                response.ErrorMessage = GetRequestErrorMessage(result);
             }
-            return await GetResponseObject<TResponse>(result);
+            else
+            {
+                response.Result = await GetResponseObject<TResponse>(result);
+            }
+            return response;
         }
-        private async Task<TResponse> GetResponseObject<TResponse>(HttpResponseMessage? responseMessage)
+        private async Task<TResponse?> GetResponseObject<TResponse>(HttpResponseMessage responseMessage)
         {
             Stream receiveStream = await responseMessage.Content.ReadAsStreamAsync();
             using StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8);
@@ -78,9 +89,16 @@ namespace ProjectManagement.Clients
             }
             return builder.ToString();
         }
-        private void HandleFailedRequest(HttpResponseMessage httpResponseMessage)
+        private static HttpContent GetHttpContent(object bodyContent)
         {
-            throw new HttpRequestException($"Error calling {httpResponseMessage.RequestMessage.RequestUri}\n\nError: {httpResponseMessage.ReasonPhrase}");
+            string body = JsonConvert.SerializeObject(bodyContent);
+            HttpContent content = new StringContent(body);
+            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(MediaTypeNames.Application.Json);
+            return content;
+        }
+        private string GetRequestErrorMessage(HttpResponseMessage httpResponseMessage)
+        {
+            return $"Error calling {httpResponseMessage.RequestMessage.RequestUri}\n\nError: {httpResponseMessage.ReasonPhrase}";
         }
     }
 }

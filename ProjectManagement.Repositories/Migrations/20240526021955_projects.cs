@@ -5,7 +5,7 @@
 namespace ProjectManagement.Repositories.Migrations
 {
     /// <inheritdoc />
-    public partial class projects : Migration
+    public partial class Projects : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

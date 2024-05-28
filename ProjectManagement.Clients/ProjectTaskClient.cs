@@ -6,19 +6,8 @@ using System.Net.Http.Headers;
 
 namespace ProjectManagement.Clients
 {
-    public class ProjectTaskClient : ProjectManagementClientBase
+    public class ProjectTaskClient : ProjectManagementClientBase<ProjectTaskViewModel>
     {
         public ProjectTaskClient(IHttpClientFactory httpClientFactory) : base(httpClientFactory){}
-        public async Task<ProjectTask> GetProjectTask(int id)
-        {
-            var parameters = new Dictionary<string, object>();
-            parameters["id"] = id;
-            return await GetAsync<ProjectTask>("ProjectManagement/Get", parameters);
-        } 
-
-        public async Task SaveProjectTask(ProjectTaskViewModel projectTask)
-        {
-            await PostAsync("ProjectTask/Save", projectTask);
-        }
     }
 }

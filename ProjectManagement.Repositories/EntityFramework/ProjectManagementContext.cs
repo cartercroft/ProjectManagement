@@ -17,7 +17,7 @@ namespace ProjectManagement.Repositories
         }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlServer("Server=.;Database=ProjectManagement;Trusted_Connection=True;TrustServerCertificate=True;");
+            options.UseSqlServer("Server=.\\SQLEXPRESS;Database=ProjectManagement;Trusted_Connection=True;TrustServerCertificate=True;");
         }
     }
 }

@@ -2,33 +2,47 @@
 @inject ProjectClient _projectClient
 
 <PageTitle>Home</PageTitle>
+@if (IsLoading)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div style="padding: 10px;" @key=@(ForceRefresh)>
+        <TabDisplay EnableAdding OnAddAsync="HandleProjectAdd">
+            @foreach(var project in Projects)
+            {
+                <TabPage Text="@project.Name">
+                    <ProjectEdit Project="@project" SaveCallback="Refresh"></ProjectEdit>
+                </TabPage>
+            }
+        </TabDisplay>
+    </div>
+}
 
-<div style="padding: 10px;">
-    <TabDisplay EnableAdding OnAddAsync="HandleProjectAdd">
-        @foreach(var project in Projects)
-        {
-            <TabPage Text="@project.Name">
-                @foreach(var task in project.Tasks)
-                {
-                    <div>
-                        @task.Status
-                    </div>
-                    <p>
-                      @task.Description  
-                    </p>
-                }
-            </TabPage>
-        }
-    </TabDisplay>
-</div>
-
-<ProjectEdit @bind-Opened=@(DialogOpened) SaveCallback="Refresh"></ProjectEdit>
+<ProjectEditDialog @bind-Opened=@(DialogOpened) SaveCallback="Refresh"></ProjectEditDialog>
 @code{
     private List<ProjectViewModel> Projects = new();
     private bool DialogOpened = false;
+    private bool IsLoading = false;
+    private bool ForceRefresh = false;
     protected override async Task OnInitializedAsync()
     {
-        Projects = await _projectClient.GetAll();
+        await GetProjects();
+    }
+    private async Task GetProjects()
+    {
+        IsLoading = true;
+        var result = await _projectClient.GetAll();
+        if (result.IsSuccess)
+        {
+            Projects = result.Result;
+        }
+        else
+        {
+            throw new Exception(result.ErrorMessage);
+        }
+        IsLoading = false;
     }
     private async Task HandleProjectAdd() {
         DialogOpened = true;
@@ -36,6 +50,8 @@
     }
     private async Task Refresh()
     {
+        ForceRefresh = !ForceRefresh;
+        await GetProjects();
         await InvokeAsync(StateHasChanged);
     }
 }
