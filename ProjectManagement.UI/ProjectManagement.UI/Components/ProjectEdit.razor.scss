@@ -1,0 +1,52 @@
+$light-gray: rgba(128, 128, 128, .6);
+$dark-gray: rgba(33, 33, 33, .7);
+$beige: rgba(123, 100, 0, .2);
+$border-radius: .33em;
+
+.project-edit-container {
+    padding: .5em;
+
+    .tasks {
+        margin: .5em 0;
+        display: flex;
+        justify-content: space-between;
+
+        .task-section {
+            border: solid 1px;
+            border-radius: $border-radius;
+            border-color: $light-gray;
+            flex-grow: 1;
+            padding: .2em 1em;
+            height: 750px;
+            width: 400px;
+
+            .task-section-header {
+                text-align: center;
+                font-weight: bold;
+                color: rgba(155, 155, 155, .8);
+            }
+
+            .task-list {
+                display: flex;
+                flex-direction: column;
+                height: 500px;
+
+                .task-detail {
+                    color: $dark-gray;
+                    background-color: $beige;
+                    border-radius: $border-radius;
+                    min-height: 3em;
+                    margin-bottom: .25em;
+                }
+
+                .task-detail:hover {
+                    color: $dark-gray;
+                }
+            }
+        }
+
+        .task-section:not(:last-child) {
+            margin-right: .4em;
+        }
+    }
+}

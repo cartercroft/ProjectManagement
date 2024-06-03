@@ -6,18 +6,16 @@
 
 @code {
     [Parameter]
-    public ProjectViewModel Project { get; set; } = null!;
-    [Parameter]
     public bool Opened { get; set; }
     [Parameter]
     public EventCallback<bool> OpenedChanged { get; set; }
     [Parameter]
-    public Func<Task> SaveCallback { get; set; } = null!;
+    public Func<ProjectViewModel, Task> SaveCallback { get; set; } = null!;
 
-    protected async Task HandleSave()
+    protected async Task HandleSave(ProjectViewModel viewModel)
     {
         Opened = false;
         await OpenedChanged.InvokeAsync(Opened);
-        await InvokeAsync(SaveCallback);
+        await SaveCallback.Invoke(viewModel);
     }
 }

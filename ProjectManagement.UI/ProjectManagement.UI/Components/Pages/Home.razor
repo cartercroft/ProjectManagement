@@ -2,37 +2,41 @@
 @inject ProjectClient _projectClient
 
 <PageTitle>Home</PageTitle>
-@if (IsLoading)
+@if (_isLoading)
 {
     <p>Loading...</p>
 }
 else
 {
-    <div style="padding: 10px;" @key=@(ForceRefresh)>
-        <TypedTabDisplay TTabItem="ProjectViewModel" EnableAdding OnAddAsync="HandleProjectAdd" EnableDelete OnDeleteAsync="HandleProjectDelete">
+    <div style="padding: 10px;" @key=@(Projects.Count)>
+        <TypedTabDisplay TTabItem="ProjectViewModel" EnableAdding OnAddAsync="HandleOpenProjectEdit" EnableDelete OnDeleteAsync="HandleDeleteDialogOpen">
             @foreach(var project in Projects)
             {
-                <TypedTabPage TabItem="project" Text="@project.Name" @key="@project.Id">
-                    <ProjectEdit Project="@project" SaveCallback="Refresh"></ProjectEdit>
+                <TypedTabPage TabItem="project" Text="@project.Name">
+                    <ProjectEdit Project="@project" SaveCallback="HandleProjectEdit"></ProjectEdit>
                 </TypedTabPage>
             }
         </TypedTabDisplay>
     </div>
 }
 
-<ProjectEditDialog @bind-Opened=@(DialogOpened) SaveCallback="Refresh"></ProjectEditDialog>
+<ProjectAddDialog @bind-Opened=@(_editDialogOpened) SaveCallback="HandleProjectAdd"></ProjectAddDialog>
+<ProjectDeleteDialog Project="@_projectToDelete" @bind-Opened=@(_deleteDialogOpened) DeleteCallback="HandleProjectDelete"></ProjectDeleteDialog>
 @code{
-    private List<ProjectViewModel> Projects = new();
-    private bool DialogOpened = false;
-    private bool IsLoading = false;
-    private bool ForceRefresh = false;
+    [Parameter]
+    public List<ProjectViewModel> Projects { get; set; } = new();
+    private bool _editDialogOpened = false;
+    private bool _isLoading = false;
+    private bool _deleteDialogOpened = false;
+    private ProjectViewModel _projectToDelete = null!;
+
     protected override async Task OnInitializedAsync()
     {
         await GetProjects();
     }
     private async Task GetProjects()
     {
-        IsLoading = true;
+        _isLoading = true;
         var result = await _projectClient.GetAll();
         if (result.IsSuccess)
         {
@@ -42,21 +46,44 @@ else
         {
             throw new Exception(result.ErrorMessage);
         }
-        IsLoading = false;
+        _isLoading = false;
     }
-    private async Task HandleProjectAdd() {
-        DialogOpened = true;
+    private async Task HandleOpenProjectEdit() {
+        _editDialogOpened = true;
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task HandleProjectEdit(ProjectViewModel viewModel)
+    {
+        if(viewModel.Id == 0)
+        {
+            await HandleProjectAdd(viewModel);
+        }
+        else
+        {
+            int index = Projects.FindIndex(p => p.Id == viewModel.Id);
+            Projects[index] = viewModel;
+        }
+    }
+    private async Task HandleProjectAdd(ProjectViewModel viewModel)
+    {
+        Projects.Add(viewModel);
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task HandleDeleteDialogOpen(ProjectViewModel projectViewModel)
+    {
+        _deleteDialogOpened = true;
+        _projectToDelete = projectViewModel;
         await InvokeAsync(StateHasChanged);
     }
     private async Task HandleProjectDelete(ProjectViewModel viewModel)
     {
-        await _projectClient.Delete(viewModel);
-        await Refresh();
-    }
-    private async Task Refresh()
-    {
-        ForceRefresh = !ForceRefresh;
-        await GetProjects();
+        Projects.Remove(viewModel);
+        var response = await _projectClient.Delete(viewModel);
+        if (!response.IsSuccess)
+        {
+            Projects.Add(viewModel);
+            throw new Exception($"Error deleting project: {response.ErrorMessage}");
+        }
         await InvokeAsync(StateHasChanged);
     }
 }

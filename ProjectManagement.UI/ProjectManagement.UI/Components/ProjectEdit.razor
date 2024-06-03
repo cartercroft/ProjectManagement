@@ -1,21 +1,35 @@
-﻿@inject ProjectClient _client
+﻿@using ProjectManagement.Classes
+@inject ProjectClient _client
 
-<div>
-    <label>Project Name:</label>
-    <InputText @bind-Value=@(Project.Name) />
-</div>
-<div>
-    @foreach (var task in Project.Tasks)
-    {
-        <p @onclick=@(() => OpenProjectTask(task))>@task.Title</p>
-    }
-</div>
-<button type="button" @onclick=@(HandleSaveClick)>Save</button>
+<div class="project-edit-container">
 
-<button type="button" @onclick=@(HandleTaskAdd)>Add Task</button>
-@if (IsTaskEditOpen)
+    <div>
+        <label>Project Name:</label>
+        <InputText @bind-Value=@(Project.Name) />
+    </div>
+    <div class="tasks">
+        @foreach (var entry in _tasksByStatus)
+        {
+            <div class="task-section">
+                <div class="task-section-header">@entry.Key</div>
+                <div class="task-list">
+                    @foreach (var task in entry.Value)
+                    {
+                        <button type="button" class="task-detail no-style" @onclick=@(() => OpenProjectTask(task))>
+                            @task.Title
+                        </button>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    <button type="button" @onclick=@(HandleSaveClick)>Save</button>
+    <button type="button" @onclick=@(HandleTaskAdd)>Add Task</button>
+</div>
+
+@if (_isTaskEditOpen)
 {
-    <TaskEdit SaveCallback="TaskSaveCallback" CloseCallback=@(() => CloseTaskEditForm()) Task="FocusedTask"></TaskEdit>
+    <TaskEdit SaveCallback="TaskSaveCallback" CloseCallback=@(() => CloseTaskEditForm()) Task="_focusedTask"></TaskEdit>
 }
 @code {
 
@@ -23,47 +37,65 @@
     [Parameter]
     public ProjectViewModel Project { get; set; } = null!;
     [Parameter]
-    public Func<Task> SaveCallback { get; set; } = null!;
+    public Func<ProjectViewModel, Task> SaveCallback { get; set; } = null!;
 
-    private bool IsTaskEditOpen = false;
-    private ProjectTaskViewModel FocusedTask = null!;
+    private bool _isTaskEditOpen = false;
+    private ProjectTaskViewModel _focusedTask = null;
+
+    private Dictionary<string, List<ProjectTaskViewModel>> _tasksByStatus = null!;
+
     protected override async Task OnInitializedAsync()
     {
         if (Project == null)
         {
             Project = new ProjectViewModel();
         }
+
+        if (_tasksByStatus == null)
+        {
+            _tasksByStatus = new();
+
+            foreach (ProjectTaskStatus status in Enum.GetValues(typeof(ProjectTaskStatus)))
+            {
+                if(status != ProjectTaskStatus.NotSet)
+                {
+                    var list = Project.Tasks.Where(t => t.Status == status).ToList();
+                    _tasksByStatus.Add(status.GetDisplayNameString(), list);
+                }
+            }
+        }
         await base.OnInitializedAsync();
     }
     protected internal async Task TaskSaveCallback(ProjectTaskViewModel viewModel)
     {
-        if(viewModel.Id <= 0)
+        if (viewModel.Id <= 0)
         {
             Project.Tasks.Add(viewModel);
+            _tasksByStatus[viewModel.Status.GetDisplayNameString()].Add(viewModel);
         }
-        IsTaskEditOpen = false;
+        _isTaskEditOpen = false;
         await InvokeAsync(StateHasChanged);
     }
     internal async Task HandleSaveClick(MouseEventArgs args)
     {
         await _client.Save(Project);
-        await SaveCallback();
+        await SaveCallback.Invoke(Project);
     }
     internal async Task OpenProjectTask(ProjectTaskViewModel viewModel)
     {
-        FocusedTask = viewModel;
-        IsTaskEditOpen = true;
+        _focusedTask = viewModel;
+        _isTaskEditOpen = true;
     }
     internal async Task CloseTaskEditForm()
     {
-        FocusedTask = null;
-        IsTaskEditOpen = false;
+        _focusedTask = null;
+        _isTaskEditOpen = false;
         await InvokeAsync(StateHasChanged);
     }
     internal async Task HandleTaskAdd(MouseEventArgs args)
     {
-        IsTaskEditOpen = true;
-        FocusedTask = new ProjectTaskViewModel();
+        _isTaskEditOpen = true;
+        _focusedTask = new ProjectTaskViewModel();
         await InvokeAsync(StateHasChanged);
     }
 }

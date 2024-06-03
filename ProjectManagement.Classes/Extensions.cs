@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjectManagement.Classes
 {
@@ -23,6 +21,23 @@ namespace ProjectManagement.Classes
                 }
             }
             return sb.ToString();
+        }
+        public static string GetDisplayNameString(this Enum enumMember)
+        {
+            DisplayAttribute attribute = GetAttribute<DisplayAttribute>(enumMember);
+            if (attribute != null)
+            {
+                return attribute.Name;
+            }
+            return enumMember.ToString();
+        }
+        public static TAttribute GetAttribute<TAttribute>(this Enum enumValue)
+            where TAttribute : Attribute
+        {
+            return enumValue.GetType()
+                            .GetMember(enumValue.ToString())
+                            .First()
+                            .GetCustomAttribute<TAttribute>();
         }
     }
 }

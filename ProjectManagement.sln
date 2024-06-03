@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagement.UI", "Pro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagement.Public.Models", "ProjectManagement.Public.Models\ProjectManagement.Public.Models.csproj", "{3F657B54-9891-425F-84F0-8792E73CB971}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayerAbstractions", "DataLayerAbstractions\DataLayerAbstractions.csproj", "{4D176DD6-B6ED-460D-8244-0BF4CF0C31AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayerAbstractions", "DataLayerAbstractions\DataLayerAbstractions.csproj", "{4D176DD6-B6ED-460D-8244-0BF4CF0C31AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,5 @@
 ﻿@inject ProjectManagement.Clients.ProjectTaskClient _taskClient
+@using ProjectManagement.Classes
 
 <div class="container">
     <div class="buttons">
@@ -10,13 +11,16 @@
     <div>
         <label for="taskName">Task Status:</label>
         <InputSelect @bind-Value=@(Task.Status)>
-            @if (string.IsNullOrEmpty(Task.Status))
+            @if (Task.Status == null)
             {
                 <option disabled selected>Select...</option>
             }
-            @foreach(string status in StatusList)
+            @foreach(Enumeration.ProjectTaskStatus status in Enumeration.ProjectTaskStatus.GetValues(typeof(Enumeration.ProjectTaskStatus)))
             {
-                <option value="@status">@status</option>
+                if(status != Enumeration.ProjectTaskStatus.NotSet)
+                {
+                    <option value="@status">@status.GetDisplayNameString()</option>
+                }
             }
         </InputSelect>
     </div>
@@ -28,7 +32,6 @@
 </div>
 
 @code {
-    private List<string> StatusList = null!;
     [Parameter]
     public Action CloseCallback { get; set; } = null!;
     [Parameter]
@@ -37,20 +40,7 @@
     public Func<ProjectTaskViewModel, Task> SaveCallback { get; set; } = null!;
     protected override async Task OnInitializedAsync()
     {
-        if(StatusList == null)
-        {
-            StatusList = new List<string>();
-            foreach(var status in Enum.GetNames(typeof(TaskStatus)))
-            {
-                StatusList.Add(status);
-            }
-        }
         await base.OnInitializedAsync();
-    }
-    private async Task HandleStatusChange(EventArgs args)
-    {
-        Task.Status = args.ToString();
-        await InvokeAsync(StateHasChanged);
     }
     private async Task HandleSubmit()
     {
@@ -59,11 +49,5 @@
     private async Task HandleClose()
     {
         await InvokeAsync(CloseCallback);
-    }
-    private enum TaskStatus
-    {
-        ToDo,
-        InProgress,
-        Completed
     }
 }

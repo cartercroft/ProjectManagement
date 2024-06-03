@@ -1,0 +1,38 @@
+﻿<Dialog Opened=@(Opened) OpenedChanged="OpenedChanged">
+    <BodyContent>
+        <div>
+            <p>
+                @($"Are you sure you want to delete Project \"{Project.Name}\"?")
+            </p>
+        </div>
+    </BodyContent>
+    <FooterContent>
+        <button type="button" @onclick=@(HandleDelete)>Delete</button>
+        <button type="button" @onclick=@(HandleCancel)>Cancel</button>
+    </FooterContent>
+</Dialog>
+
+@code {
+    [Parameter]
+    public ProjectViewModel Project { get; set; } = null!;
+    [Parameter]
+    public bool Opened { get; set; }
+    [Parameter]
+    public EventCallback<bool> OpenedChanged { get; set; }
+    [Parameter]
+    public Func<ProjectViewModel, Task> DeleteCallback { get; set; } = null!;
+
+    private async Task HandleDelete()
+    {
+        Opened = false;
+        await OpenedChanged.InvokeAsync(Opened);
+        await DeleteCallback.Invoke(Project);
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task HandleCancel()
+    {
+        Opened = false;
+        await OpenedChanged.InvokeAsync(Opened);
+        await InvokeAsync(StateHasChanged);
+    }
+}

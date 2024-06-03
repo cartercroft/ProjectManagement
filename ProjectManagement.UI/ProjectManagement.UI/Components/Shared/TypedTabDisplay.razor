@@ -74,7 +74,7 @@
     }
     internal async Task HandleDeleteClick(TTabItem tabItem)
     {
-        if (OnAdd != null)
+        if (OnDelete != null)
         {
             OnDelete.Invoke(tabItem);
         }
