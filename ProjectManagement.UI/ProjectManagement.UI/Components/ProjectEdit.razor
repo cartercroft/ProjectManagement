@@ -1,8 +1,8 @@
 ﻿@using ProjectManagement.Classes
+@using System.Linq
 @inject ProjectClient _client
 
 <div class="project-edit-container">
-
     <div>
         <label>Project Name:</label>
         <InputText @bind-Value=@(Project.Name) />
@@ -27,10 +27,8 @@
     <button type="button" @onclick=@(HandleTaskAdd)>Add Task</button>
 </div>
 
-@if (_isTaskEditOpen)
-{
-    <TaskEdit SaveCallback="TaskSaveCallback" CloseCallback=@(() => CloseTaskEditForm()) Task="_focusedTask"></TaskEdit>
-}
+<TaskEditDialog @bind-Opened=@(_isTaskEditOpen) Task="_focusedTask" TaskChanged="TaskChangedCallback"></TaskEditDialog>
+
 @code {
 
 
@@ -53,25 +51,42 @@
 
         if (_tasksByStatus == null)
         {
-            _tasksByStatus = new();
+            _tasksByStatus = Enum.GetValues(typeof(ProjectTaskStatus))
+            .Cast<ProjectTaskStatus>()
+            .ToList()
+            .ToDictionary(s => s.GetDisplayNameString(),
+            s => Project.Tasks.Where(t => t.Status == s).ToList());
 
-            foreach (ProjectTaskStatus status in Enum.GetValues(typeof(ProjectTaskStatus)))
-            {
-                if(status != ProjectTaskStatus.NotSet)
-                {
-                    var list = Project.Tasks.Where(t => t.Status == status).ToList();
-                    _tasksByStatus.Add(status.GetDisplayNameString(), list);
-                }
-            }
+            _tasksByStatus.Remove(ProjectTaskStatus.NotSet.GetDisplayNameString());
         }
         await base.OnInitializedAsync();
     }
-    protected internal async Task TaskSaveCallback(ProjectTaskViewModel viewModel)
+    protected internal async Task TaskChangedCallback(ProjectTaskViewModel viewModel)
     {
+        string newStatus = viewModel.Status.GetDisplayNameString();
         if (viewModel.Id <= 0)
         {
             Project.Tasks.Add(viewModel);
-            _tasksByStatus[viewModel.Status.GetDisplayNameString()].Add(viewModel);
+            _tasksByStatus[newStatus].Add(viewModel);
+        }
+        else
+        {
+            string oldStatus = viewModel.PreviousState?.Status.GetDisplayNameString() ?? "";
+            int index = _tasksByStatus[newStatus].FindIndex(t => t.Id == viewModel.Id);
+            //not found in old status, we moved the task
+            if (!string.IsNullOrEmpty(oldStatus) && index == -1)
+            {
+                _tasksByStatus[oldStatus].Remove(_focusedTask);
+                _tasksByStatus[newStatus].Add(viewModel);
+            }
+            else if(!string.IsNullOrEmpty(oldStatus))
+            {
+                _tasksByStatus[oldStatus][index] = viewModel;
+            }
+            else
+            {
+                throw new Exception("Error adding task to dictionary. Contact a dev.");
+            }
         }
         _isTaskEditOpen = false;
         await InvokeAsync(StateHasChanged);
@@ -84,6 +99,13 @@
     internal async Task OpenProjectTask(ProjectTaskViewModel viewModel)
     {
         _focusedTask = viewModel;
+        viewModel.PreviousState = new ProjectTaskViewModel();
+
+        viewModel.PreviousState.Status = viewModel.Status;
+        viewModel.PreviousState.Title = viewModel.Title;
+        viewModel.PreviousState.Description = viewModel.Description;
+        viewModel.PreviousState.Id = viewModel.Id;
+
         _isTaskEditOpen = true;
     }
     internal async Task CloseTaskEditForm()

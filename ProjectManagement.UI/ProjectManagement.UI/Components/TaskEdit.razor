@@ -2,9 +2,6 @@
 @using ProjectManagement.Classes
 
 <div class="container">
-    <div class="buttons">
-        <button type="button" class="no-style" @onclick="HandleClose">x</button>
-    </div>
     <div>
         <InputText @bind-Value=@(Task.Title) placeholder="Title..."></InputText>
     </div>
@@ -13,7 +10,7 @@
         <InputSelect @bind-Value=@(Task.Status)>
             @if (Task.Status == null)
             {
-                <option disabled selected>Select...</option>
+                <option disabled selected>Status...</option>
             }
             @foreach(Enumeration.ProjectTaskStatus status in Enumeration.ProjectTaskStatus.GetValues(typeof(Enumeration.ProjectTaskStatus)))
             {
@@ -25,26 +22,25 @@
         </InputSelect>
     </div>
     <div>
-        <label for="taskName">Task Description:</label>
-        <InputTextArea class="taskDescription" @bind-Value="Task.Description"></InputTextArea>
+        <InputTextArea class="taskDescription" @bind-Value="Task.Description" placeholder="Description..."></InputTextArea>
     </div>
-    <button type="button" class="btn btn-lg btn-success" @onclick=@(HandleSubmit)>Save</button>
+    <button type="button" @onclick=@(HandleSubmit)>Save</button>
 </div>
 
 @code {
     [Parameter]
     public Action CloseCallback { get; set; } = null!;
     [Parameter]
-    public ProjectManagement.Public.Models.ProjectTaskViewModel Task { get; set; } = new();
+    public ProjectTaskViewModel Task { get; set; } = new();
     [Parameter]
-    public Func<ProjectTaskViewModel, Task> SaveCallback { get; set; } = null!;
+    public EventCallback<ProjectTaskViewModel> TaskChanged { get; set; }
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
     }
     private async Task HandleSubmit()
     {
-        await SaveCallback.Invoke(Task);
+        await TaskChanged.InvokeAsync(Task);
     }
     private async Task HandleClose()
     {

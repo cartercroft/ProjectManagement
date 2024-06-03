@@ -1,0 +1,41 @@
+﻿<Dialog Opened=@(Opened) OpenedChanged="OpenedChanged">
+    <BodyContent>
+        <TaskEdit Task=@(Task) TaskChanged="HandleTaskChange" />
+    </BodyContent>
+    <FooterContent>
+        <button type="button" @onclick=@(HandleCancel)>Cancel</button>
+    </FooterContent>
+</Dialog>
+
+@code {
+    [Parameter]
+    public bool Opened { get; set; }
+    [Parameter]
+    public EventCallback<bool> OpenedChanged { get; set; }
+    [Parameter]
+    public ProjectTaskViewModel Task { get; set; } = null!;
+    [Parameter]
+    public EventCallback<ProjectTaskViewModel> TaskChanged { get; set; }
+
+    private async Task HandleSave()
+    {
+        Opened = false;
+        await OpenedChanged.InvokeAsync(Opened);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task HandleCancel()
+    {
+        Opened = false;
+        await OpenedChanged.InvokeAsync(Opened);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task HandleTaskChange(ProjectTaskViewModel viewModel)
+    {
+        await TaskChanged.InvokeAsync(Task);
+        Opened = false;
+        await OpenedChanged.InvokeAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+}

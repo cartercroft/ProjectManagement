@@ -1,28 +1,23 @@
 ﻿.container {
-    position: relative;
-    background-color: grey;
     display: flex;
-    flex-wrap: wrap;
-    max-width: 200px;
+    flex-direction: column;
     padding: 4px;
-
-    .buttons {
-        display: flex;
-        width: 100%;
-        justify-content: flex-end;
+    div{
+        margin-bottom: .25em;
     }
-
     textarea {
         resize: none;
         overflow-y: scroll;
         height: 225px;
+        width: 100%;
+        padding-right: 0;
+        scrollbar-width: none;
     }
-
     input, textarea {
         min-width: 180px;
     }
     /*#region textarea scrollbar*/
-    textarea::-webkit-scrollbar {
+    /*textarea::-webkit-scrollbar {
         width: 10px;
     }
 
@@ -30,7 +25,7 @@
         background-color: gray;
         border-radius: 5px;
         padding-right: 15px;
-    }
+    }*/
     /*#endregion textarea scrollbar*/
     .header {
         margin: 0 auto;
