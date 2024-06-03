@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProjectManagement.Classes.Interfaces;
-using ProjectManagement.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace ProjectManagement.Repositories
+namespace DataLayerAbstractions
 {
     public class RepositoryBase<TModel> : IRepository<TModel> where TModel : ModelBase
     {
@@ -59,7 +57,7 @@ namespace ProjectManagement.Repositories
         }
         public virtual List<TModel> GetAll()
         {
-            return _dbSet.Any() ? _dbSet.ToList() : new List<TModel>();
+            return _dbSet.Any() ? _dbSet.Where(i => !i.IsDeleted).ToList() : new List<TModel>();
         }
         private int GetModelKey(TModel model)
         {

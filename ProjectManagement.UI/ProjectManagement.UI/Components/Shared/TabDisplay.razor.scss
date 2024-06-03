@@ -1,9 +1,9 @@
 $border-style: 2px solid rgb(139, 128, 0);
 
 .tab-wrapper {
-    border-left: $border-style;
     position: relative;
     line-height: 24px;
+
     .button_plus {
         position: absolute;
         margin: 5.6px 0 0 5.6px;
@@ -50,14 +50,25 @@ $border-style: 2px solid rgb(139, 128, 0);
     .tabs {
         display: inline-flex;
         width: fit-content;
+        margin-bottom: 4px;
         button {
+            margin-right: 4px;
             border: $border-style;
-            /*border-radius: 2px 2px 0 0;*/
+            border-radius: 10px;
             border-bottom: none;
-            border-left: none;
             padding: .25rem;
-            border-left: none;
+            padding-right: 1.33em;
             border-bottom: $border-style;
+
+            span.delete {
+                margin-left: 5px;
+                position: absolute;
+            }
+
+            span.delete:hover {
+                text-decoration: underline;
+                font-size: 1.5em;
+            }
         }
 
         .active {

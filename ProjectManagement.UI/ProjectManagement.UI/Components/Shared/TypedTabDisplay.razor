@@ -1,15 +1,17 @@
-﻿@namespace ProjectManagement.UI.Components.Shared
+﻿@typeparam TTabItem
+@namespace ProjectManagement.UI.Components.Shared
 
 <div class="tab-wrapper">
     <div class="tabs">
-        @foreach (TabPage tabPage in Pages)
-          {
+        @foreach (TypedTabPage<TTabItem> tabPage in Pages)
+        {
             <button type="button"
-              class="@GetButtonClass(tabPage) no-style"
-              @onclick=@(() => ActivatePage(tabPage))>
-              @tabPage.Text
+                    class="@GetButtonClass(tabPage) no-style"
+                    @onclick=@(() => ActivatePage(tabPage))>
+                @tabPage.Text
+                <span class="delete" @onclick=@(() => HandleDeleteClick(tabPage.TabItem))>x</span>
             </button>
-          }
+        }
     </div>
     @if (EnableAdding)
     {
@@ -33,31 +35,34 @@
     public Action OnAdd { get; set; } = null!;
     [Parameter]
     public Func<Task> OnAddAsync { get; set; } = null!;
-
-    // Next line is needed so we are able to add <TabPage> components inside
+    [Parameter]
+    public Func<TTabItem, object> OnDelete { get; set; } = null!;
+    [Parameter]
+    public Func<TTabItem, Task> OnDeleteAsync { get; set; } = null!;
     [Parameter]
     public RenderFragment ChildContent { get; set; } = null!;
 
-    public TabPage ActivePage { get; set; } = null!;
-    List<TabPage> Pages = new List<TabPage>();
+    public TypedTabPage<TTabItem> ActivePage { get; set; } = null!;
+    List<TypedTabPage<TTabItem>> Pages = new List<TypedTabPage<TTabItem>>();
 
     protected override async Task OnInitializedAsync()
     {
-        if(EnableAdding 
+        if (EnableAdding
             && OnAdd == null
             && OnAddAsync == null)
         {
             throw new ArgumentNullException("Either parameter OnAdd or OnAddAsync must be provided to TabDisplay when EnableAdding is set to true.");
         }
-        if(OnAdd != null && OnAddAsync != null)
+        if (OnAdd != null && OnAddAsync != null)
         {
             throw new ArgumentException("Only one of OnAdd or OnAddAsync can be provided to TabDisplay. To fix this, remove either OnAdd OR OnAddAsync.");
         }
+
         await base.OnInitializedAsync();
     }
     internal async Task HandleAddClick(MouseEventArgs args)
     {
-        if(OnAdd != null)
+        if (OnAdd != null)
         {
             await InvokeAsync(OnAdd);
         }
@@ -67,15 +72,27 @@
         }
         await InvokeAsync(StateHasChanged);
     }
-    internal string GetButtonClass(TabPage page)
+    internal async Task HandleDeleteClick(TTabItem tabItem)
+    {
+        if (OnAdd != null)
+        {
+            OnDelete.Invoke(tabItem);
+        }
+        else
+        {
+            await OnDeleteAsync.Invoke(tabItem);
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+    internal string GetButtonClass(TypedTabPage<TTabItem> page)
     {
         return page == ActivePage ? "active" : "";
     }
-    internal void ActivatePage(TabPage page)
+    internal void ActivatePage(TypedTabPage<TTabItem> page)
     {
         ActivePage = page;
     }
-    internal void AddPage(TabPage tabPage)
+    internal void AddPage(TypedTabPage<TTabItem> tabPage)
     {
         Pages.Add(tabPage);
         if (Pages.Count == 1)

@@ -15,6 +15,10 @@ namespace ProjectManagement.Clients
         {
             return await PostAsync<TViewModel>($"{GetControllerName()}/Save", model);
         }
+        public async Task<Response> Delete (TViewModel model)
+        {
+            return await PostAsync<TViewModel>($"{GetControllerName()}/Delete", model);
+        }
         private string GetRuntimeClassName()
         {
             return this.GetType().Name;

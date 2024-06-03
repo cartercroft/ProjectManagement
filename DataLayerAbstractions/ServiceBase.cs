@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
-using ProjectManagement.Models;
-using ProjectManagement.Public.Models;
-using ProjectManagement.Repositories;
 
-namespace ProjectManagement.Services
+namespace DataLayerAbstractions
 {
     public class ServiceBase<TViewModel, TRepository, TDataModel> : AbstractServiceBase<TViewModel> 
         where TViewModel : ViewModelBase

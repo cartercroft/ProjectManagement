@@ -1,0 +1,30 @@
+﻿@namespace ProjectManagement.UI.Components.Shared
+@typeparam TTabItem
+
+@if (Parent.ActivePage == this)
+{
+    @ChildContent
+}
+
+@code {
+    [CascadingParameter]
+    private TypedTabDisplay<TTabItem> Parent { get; set; } = null!;
+
+    [Parameter]
+    public TTabItem TabItem { get; set; }
+    [Parameter]
+    public string Text { get; set; } = null!;
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        if (Parent == null)
+        {
+            throw new ArgumentNullException(nameof(Parent), "TabPage must exist within a TabDisplay");
+        }
+
+        Parent.AddPage(this);
+        base.OnInitialized();
+    }
+}

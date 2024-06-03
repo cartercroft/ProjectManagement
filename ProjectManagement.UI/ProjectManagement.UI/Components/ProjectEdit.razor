@@ -1,11 +1,22 @@
 ﻿@inject ProjectClient _client
 
-        <div>
-            <label>Project Name:</label>
-            <InputText @bind-Value=@(Project.Name) />
-        </div>
-        <button type="button" @onclick=@(HandleSaveClick)>Save</button>
+<div>
+    <label>Project Name:</label>
+    <InputText @bind-Value=@(Project.Name) />
+</div>
+<div>
+    @foreach (var task in Project.Tasks)
+    {
+        <p @onclick=@(() => OpenProjectTask(task))>@task.Title</p>
+    }
+</div>
+<button type="button" @onclick=@(HandleSaveClick)>Save</button>
 
+<button type="button" @onclick=@(HandleTaskAdd)>Add Task</button>
+@if (IsTaskEditOpen)
+{
+    <TaskEdit SaveCallback="TaskSaveCallback" CloseCallback=@(() => CloseTaskEditForm()) Task="FocusedTask"></TaskEdit>
+}
 @code {
 
 
@@ -13,18 +24,46 @@
     public ProjectViewModel Project { get; set; } = null!;
     [Parameter]
     public Func<Task> SaveCallback { get; set; } = null!;
+
+    private bool IsTaskEditOpen = false;
+    private ProjectTaskViewModel FocusedTask = null!;
     protected override async Task OnInitializedAsync()
     {
-        if(Project == null)
+        if (Project == null)
         {
             Project = new ProjectViewModel();
         }
         await base.OnInitializedAsync();
     }
-
+    protected internal async Task TaskSaveCallback(ProjectTaskViewModel viewModel)
+    {
+        if(viewModel.Id <= 0)
+        {
+            Project.Tasks.Add(viewModel);
+        }
+        IsTaskEditOpen = false;
+        await InvokeAsync(StateHasChanged);
+    }
     internal async Task HandleSaveClick(MouseEventArgs args)
     {
         await _client.Save(Project);
         await SaveCallback();
+    }
+    internal async Task OpenProjectTask(ProjectTaskViewModel viewModel)
+    {
+        FocusedTask = viewModel;
+        IsTaskEditOpen = true;
+    }
+    internal async Task CloseTaskEditForm()
+    {
+        FocusedTask = null;
+        IsTaskEditOpen = false;
+        await InvokeAsync(StateHasChanged);
+    }
+    internal async Task HandleTaskAdd(MouseEventArgs args)
+    {
+        IsTaskEditOpen = true;
+        FocusedTask = new ProjectTaskViewModel();
+        await InvokeAsync(StateHasChanged);
     }
 }

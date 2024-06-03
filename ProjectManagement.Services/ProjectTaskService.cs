@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DataLayerAbstractions;
 using ProjectManagement.Models;
 using ProjectManagement.Public.Models;
 using ProjectManagement.Repositories;

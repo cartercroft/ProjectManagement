@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ProjectManagement.Models
+namespace DataLayerAbstractions
 {
     public class ModelBase
     {

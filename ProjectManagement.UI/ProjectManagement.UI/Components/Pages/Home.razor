@@ -9,14 +9,14 @@
 else
 {
     <div style="padding: 10px;" @key=@(ForceRefresh)>
-        <TabDisplay EnableAdding OnAddAsync="HandleProjectAdd">
+        <TypedTabDisplay TTabItem="ProjectViewModel" EnableAdding OnAddAsync="HandleProjectAdd" EnableDelete OnDeleteAsync="HandleProjectDelete">
             @foreach(var project in Projects)
             {
-                <TabPage Text="@project.Name">
+                <TypedTabPage TabItem="project" Text="@project.Name" @key="@project.Id">
                     <ProjectEdit Project="@project" SaveCallback="Refresh"></ProjectEdit>
-                </TabPage>
+                </TypedTabPage>
             }
-        </TabDisplay>
+        </TypedTabDisplay>
     </div>
 }
 
@@ -47,6 +47,11 @@ else
     private async Task HandleProjectAdd() {
         DialogOpened = true;
         await InvokeAsync(StateHasChanged);
+    }
+    private async Task HandleProjectDelete(ProjectViewModel viewModel)
+    {
+        await _projectClient.Delete(viewModel);
+        await Refresh();
     }
     private async Task Refresh()
     {

@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DataLayerAbstractions\DataLayerAbstractions.csproj" />
     <ProjectReference Include="..\ProjectManagement.Classes\ProjectManagement.Classes.csproj" />
     <ProjectReference Include="..\ProjectManagement.Models\ProjectManagement.Models.csproj" />
   </ItemGroup>

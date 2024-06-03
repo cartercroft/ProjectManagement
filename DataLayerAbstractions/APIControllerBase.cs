@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Any;
-using ProjectManagement.Models;
-using ProjectManagement.Public.Models;
-using ProjectManagement.Repositories;
-using ProjectManagement.Services;
+using DataLayerAbstractions;
 
-namespace ProjectManagement.API.Controllers
+namespace DataLayerAbstractions
 {
     [Route("/api/[controller]/[action]")]
     [ApiController]

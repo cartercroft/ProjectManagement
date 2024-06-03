@@ -1,7 +1,12 @@
 ﻿@inject ProjectManagement.Clients.ProjectTaskClient _taskClient
 
 <div class="container">
-    <div class="header">Add a new Task</div>
+    <div class="buttons">
+        <button type="button" class="no-style" @onclick="HandleClose">x</button>
+    </div>
+    <div>
+        <InputText @bind-Value=@(Task.Title) placeholder="Title..."></InputText>
+    </div>
     <div>
         <label for="taskName">Task Status:</label>
         <InputSelect @bind-Value=@(Task.Status)>
@@ -24,7 +29,12 @@
 
 @code {
     private List<string> StatusList = null!;
-    private ProjectManagement.Public.Models.ProjectTaskViewModel Task = new();
+    [Parameter]
+    public Action CloseCallback { get; set; } = null!;
+    [Parameter]
+    public ProjectManagement.Public.Models.ProjectTaskViewModel Task { get; set; } = new();
+    [Parameter]
+    public Func<ProjectTaskViewModel, Task> SaveCallback { get; set; } = null!;
     protected override async Task OnInitializedAsync()
     {
         if(StatusList == null)
@@ -44,7 +54,11 @@
     }
     private async Task HandleSubmit()
     {
-        await _taskClient.Save(Task);
+        await SaveCallback.Invoke(Task);
+    }
+    private async Task HandleClose()
+    {
+        await InvokeAsync(CloseCallback);
     }
     private enum TaskStatus
     {

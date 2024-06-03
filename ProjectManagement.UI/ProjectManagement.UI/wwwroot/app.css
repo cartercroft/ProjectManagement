@@ -13,6 +13,7 @@ body {
 }
 
 .container {
+  position: relative;
   background-color: grey;
   display: flex;
   flex-wrap: wrap;
@@ -20,6 +21,11 @@ body {
   padding: 4px;
   /*#region textarea scrollbar*/
   /*#endregion textarea scrollbar*/
+}
+.container .buttons {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
 }
 .container textarea {
   resize: none;
@@ -88,7 +94,6 @@ body {
 }
 
 .tab-wrapper {
-  border-left: 2px solid rgb(139, 128, 0);
   position: relative;
   line-height: 24px;
 }
@@ -133,15 +138,24 @@ body {
 .tab-wrapper .tabs {
   display: inline-flex;
   width: fit-content;
+  margin-bottom: 4px;
 }
 .tab-wrapper .tabs button {
+  margin-right: 4px;
   border: 2px solid rgb(139, 128, 0);
-  /*border-radius: 2px 2px 0 0;*/
+  border-radius: 10px;
   border-bottom: none;
-  border-left: none;
   padding: 0.25rem;
-  border-left: none;
+  padding-right: 1.33em;
   border-bottom: 2px solid rgb(139, 128, 0);
+}
+.tab-wrapper .tabs button span.delete {
+  margin-left: 5px;
+  position: absolute;
+}
+.tab-wrapper .tabs button span.delete:hover {
+  text-decoration: underline;
+  font-size: 1.5em;
 }
 .tab-wrapper .tabs .active {
   background-color: rgba(233, 233, 233, 0.5);
@@ -155,4 +169,4 @@ body {
   width: 100%;
 }
 
-/*# sourceMappingURL=data:application/json;charset=utf-8,%7B%22version%22:3,%22sourceRoot%22:%22%22,%22sources%22:%5B%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/App.scss%22,%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/TaskAdd.razor.scss%22,%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/Shared/Dialog.razor.scss%22,%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/Shared/TabDisplay.razor.scss%22%5D,%22names%22:%5B%5D,%22mappings%22:%22AAAA;EACI;EACA;EACA;EACA;EACA;EACA;EACA;;;AAEJ;EACI;;;ACVH;EACG;EACA;EACA;EACA;EACA;AAWA;AAUA;;AAnBA;EACI;EACA;EACA;;AAGJ;EACI;;AAGJ;EACI;;AAGJ;EACI;EACA;EACA;;AAGJ;EACI;EACA;EACA;;;AC9BR;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;;AAGJ;EACI;EACA;EACA;EACA;;AAEA;EACI;EACA;EACA;EACA;;AAGJ;EACI;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;EACI;;;AC1CR;EACI,aAHW;EAIX;EACA;;AACA;EACI;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;AAAA;EAEI;EACA;;AAGJ;EACI;EACA;;AAGJ;EACI;EACA;;AACA;EACI,QArDG;AAsDH;EACA;EACA;EACA;EACA;EACA,eA3DG;;AA8DP;EACI;;AAGJ;EACI;;AAIR;EACI,SAxEO;EAyEP;EACA%22%7D */
+/*# sourceMappingURL=data:application/json;charset=utf-8,%7B%22version%22:3,%22sourceRoot%22:%22%22,%22sources%22:%5B%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/App.scss%22,%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/TaskEdit.razor.scss%22,%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/Shared/Dialog.razor.scss%22,%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/Shared/TabDisplay.razor.scss%22%5D,%22names%22:%5B%5D,%22mappings%22:%22AAAA;EACI;EACA;EACA;EACA;EACA;EACA;EACA;;;AAEJ;EACI;;;ACVH;EACG;EACA;EACA;EACA;EACA;EACA;AAiBA;AAUA;;AAzBA;EACI;EACA;EACA;;AAGJ;EACI;EACA;EACA;;AAGJ;EACI;;AAGJ;EACI;;AAGJ;EACI;EACA;EACA;;AAGJ;EACI;EACA;EACA;;;ACrCR;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;;AAGJ;EACI;EACA;EACA;EACA;;AAEA;EACI;EACA;EACA;EACA;;AAGJ;EACI;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;EACI;;;AC1CR;EACI;EACA;;AAEA;EACI;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;AAAA;EAEI;EACA;;AAGJ;EACI;EACA;;AAGJ;EACI;EACA;EACA;;AACA;EACI;EACA,QAvDG;EAwDH;EACA;EACA;EACA;EACA,eA5DG;;AA8DH;EACI;EACA;;AAGJ;EACI;EACA;;AAIR;EACI;;AAGJ;EACI;;AAIR;EACI,SAnFO;EAoFP;EACA%22%7D */

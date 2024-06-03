@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DataLayerAbstractions;
+using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Models;
 
 namespace ProjectManagement.Repositories

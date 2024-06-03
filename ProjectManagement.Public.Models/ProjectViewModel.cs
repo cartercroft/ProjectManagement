@@ -1,4 +1,6 @@
-﻿namespace ProjectManagement.Public.Models
+﻿using DataLayerAbstractions;
+
+namespace ProjectManagement.Public.Models
 {
     public class ProjectViewModel : ViewModelBase
     {

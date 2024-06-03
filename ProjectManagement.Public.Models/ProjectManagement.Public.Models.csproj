@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DataLayerAbstractions\DataLayerAbstractions.csproj" />
     <ProjectReference Include="..\ProjectManagement.Classes\ProjectManagement.Classes.csproj" />
   </ItemGroup>
 
