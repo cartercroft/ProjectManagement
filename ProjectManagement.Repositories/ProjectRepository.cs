@@ -1,6 +1,7 @@
 ﻿using DataLayerAbstractions;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Models;
+using System.Linq.Expressions;
 
 namespace ProjectManagement.Repositories
 {
@@ -10,10 +11,10 @@ namespace ProjectManagement.Repositories
         public ProjectRepository(ProjectManagementContext context) : base(context)
         {
             _context = context;
-        }   
-        public override List<Project> GetAll()
-        {
-            return _context.Projects.Where(p => !p.IsDeleted).Include(p => p.Tasks).ToList();
         }
+        protected override List<Expression<Func<Project, object>>> AlwaysInclude => new List<Expression<Func<Project, object>>> 
+        {
+            p => p.Tasks
+        }; 
     }
 }

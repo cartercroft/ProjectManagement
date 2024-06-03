@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace DataLayerAbstractions
@@ -13,6 +15,9 @@ namespace DataLayerAbstractions
             _dbContext = context;
             _dbSet = _dbContext.Set<TModel>();
         }
+        protected virtual List<Expression<Func<TModel, object>>> AlwaysInclude { get; } = null!;
+        protected virtual List<Expression<Func<TModel, object>>> IncludeOnGet { get; } = null!;
+        protected virtual List<Expression<Func<TModel, object>>> IncludeOnGetAll { get; } = null!;
         public virtual void Delete(TModel model)
         {
             model.IsDeleted = true;
@@ -35,20 +40,22 @@ namespace DataLayerAbstractions
 
             _dbContext.SaveChanges();
         }
-
         protected virtual void Add(TModel model)
         {
             model.CreatedWhen = DateTime.Now;
             _dbSet.Add(model);
         }
-
         protected virtual void Update(TModel model) 
         { 
             _dbSet.Update(model);
         }
         public virtual TModel Get(int id)
         {
-            TModel? model = _dbSet.Find(id);
+            TModel? model = _dbSet
+                .ApplyInclusion(AlwaysInclude)
+                .ApplyInclusion(IncludeOnGet)
+                .FirstOrDefault(m => m.Id == id);
+
             if(model == null)
             {
                 throw new KeyNotFoundException($"No {typeof(TModel).Name} found with ID {id}.");
@@ -56,6 +63,14 @@ namespace DataLayerAbstractions
             return model;
         }
         public virtual List<TModel> GetAll()
+        {
+            return _dbSet.Any() ? _dbSet
+                .Where(i => !i.IsDeleted)
+                .ApplyInclusion(AlwaysInclude)
+                .ApplyInclusion(IncludeOnGetAll)
+                .ToList() : new List<TModel>();
+        }
+        public virtual List<TModel> ApplyQuery()
         {
             return _dbSet.Any() ? _dbSet.Where(i => !i.IsDeleted).ToList() : new List<TModel>();
         }

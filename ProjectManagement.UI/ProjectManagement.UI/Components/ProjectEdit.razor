@@ -76,7 +76,9 @@
             //not found in old status, we moved the task
             if (!string.IsNullOrEmpty(oldStatus) && index == -1)
             {
-                _tasksByStatus[oldStatus].Remove(_focusedTask);
+                var oldTask = _tasksByStatus[oldStatus].FirstOrDefault(x => x.Id == viewModel.Id);
+                _tasksByStatus[oldStatus].Remove(oldTask);
+                Project.Tasks.Remove(oldTask);
                 _tasksByStatus[newStatus].Add(viewModel);
             }
             else if(!string.IsNullOrEmpty(oldStatus))

@@ -2,11 +2,21 @@
 @using ProjectManagement.Classes
 
 <div class="container">
+    <h2>
+        @if(Task.Id <= 0)
+        {
+            @("Create New Task")
+        }
+        else
+        {
+            @($"Edit Task")
+        }
+    </h2>
     <div>
-        <InputText @bind-Value=@(Task.Title) placeholder="Title..."></InputText>
+        <InputText class="task-title" @bind-Value=@(Task.Title) placeholder="Title..."></InputText>
     </div>
     <div>
-        <label for="taskName">Task Status:</label>
+        <label for="taskName">Status:</label>
         <InputSelect @bind-Value=@(Task.Status)>
             @if (Task.Status == null)
             {
