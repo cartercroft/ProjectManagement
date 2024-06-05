@@ -1,6 +1,7 @@
 ﻿using DataLayerAbstractions;
-using ProjectManagement.Classes;
 using Microsoft.EntityFrameworkCore;
+using ProjectManagement.Classes;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjectManagement.Models
 {
@@ -11,6 +12,6 @@ namespace ProjectManagement.Models
         public string Description { get; set; } = null!;
         public int ProjectId { get; set; }
         [DeleteBehavior(DeleteBehavior.Restrict)]
-        public Project Project { get; set; } = null!;
+        public virtual Project Project { get; set; } = null!;
     }
 }

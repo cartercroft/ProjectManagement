@@ -45,7 +45,7 @@ namespace ProjectManagement.Repositories.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("ProjectManagement.Models.ProjectTask", b =>
@@ -83,7 +83,7 @@ namespace ProjectManagement.Repositories.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjectTasks");
+                    b.ToTable("ProjectTasks", (string)null);
                 });
 
             modelBuilder.Entity("ProjectManagement.Models.ProjectTask", b =>

@@ -176,41 +176,46 @@ body {
   padding: 0.5em;
 }
 .project-edit-container .tasks {
-  margin: 0.5em 0;
   display: flex;
   justify-content: space-between;
 }
-.project-edit-container .tasks .task-section {
+.project-edit-container .tasks .task-section-container {
+  position: relative;
   border: solid 1px;
   border-radius: 0.33em;
   border-color: rgba(128, 128, 128, 0.6);
   flex-grow: 1;
   padding: 0.2em 1em;
-  height: 750px;
-  width: 400px;
+  margin-right: 0.5em;
+  justify-content: space-between;
 }
-.project-edit-container .tasks .task-section .task-section-header {
+.project-edit-container .tasks .task-section-container .task-section-header {
   text-align: center;
   font-weight: bold;
   color: rgba(155, 155, 155, 0.8);
 }
-.project-edit-container .tasks .task-section .task-list {
+.project-edit-container .tasks .task-section-container .task-section {
+  height: 750px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+.project-edit-container .tasks .task-section-container .task-section .task-list {
   display: flex;
   flex-direction: column;
   height: 500px;
 }
-.project-edit-container .tasks .task-section .task-list .task-detail {
+.project-edit-container .tasks .task-section-container .task-section .task-list .task-detail {
   color: rgba(33, 33, 33, 0.7);
   background-color: rgba(123, 100, 0, 0.2);
   border-radius: 0.33em;
   min-height: 3em;
   margin-bottom: 0.25em;
 }
-.project-edit-container .tasks .task-section .task-list .task-detail:hover {
+.project-edit-container .tasks .task-section-container .task-section .task-list .task-detail:hover {
   color: rgba(33, 33, 33, 0.7);
 }
-.project-edit-container .tasks .task-section:not(:last-child) {
+.project-edit-container .tasks .task-section-container .task-section:not(:last-child) {
   margin-right: 0.4em;
 }
 
-/*# sourceMappingURL=data:application/json;charset=utf-8,%7B%22version%22:3,%22sourceRoot%22:%22%22,%22sources%22:%5B%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/App.scss%22,%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/TaskEdit.razor.scss%22,%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/Shared/Dialog.razor.scss%22,%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/Shared/TabDisplay.razor.scss%22,%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/ProjectEdit.razor.scss%22%5D,%22names%22:%5B%5D,%22mappings%22:%22AAEA;EACI;EACA;EACA;EACA;EACA;EACA;EACA;;;AAEJ;EACI;EACA,kBAbe;;;ACAlB;EACG;EACA;EACA;AAkBA;AACA;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;AASA;;AA3BA;EACI;;AAEJ;EACI;EACA;EACA;EACA;EACA;EACA;;AAEJ;EACI;;AAEJ;EACI;;AAaJ;EACI;EACA;EACA;;;ACnCR;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;;AAGJ;EACI;EACA;EACA;EACA;;AAEA;EACI;EACA;EACA;EACA;;AAGJ;EACI;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;EACI;;;AC1CR;EACI;EACA;;AAEA;EACI;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;AAAA;EAEI;EACA;;AAGJ;EACI;EACA;;AAGJ;EACI;EACA;EACA;;AACA;EACI;EACA,QAvDG;EAwDH;EACA;EACA;EACA;EACA,eA5DG;;AA8DH;EACI;EACA;;AAGJ;EACI;EACA;;AAIR;EACI;;AAGJ;EACI;;AAIR;EACI,SAnFO;EAoFP;EACA;;;AChFR;EACI;;AAEA;EACI;EACA;EACA;;AAEA;EACI;EACA,eAZI;EAaJ,cAhBC;EAiBD;EACA;EACA;EACA;;AAEA;EACI;EACA;EACA;;AAGJ;EACI;EACA;EACA;;AAEA;EACI,OAjCR;EAkCQ,kBAjCZ;EAkCY,eAjCJ;EAkCI;EACA;;AAGJ;EACI,OAzCR;;AA8CJ;EACI%22%7D */
+/*# sourceMappingURL=data:application/json;charset=utf-8,%7B%22version%22:3,%22sourceRoot%22:%22%22,%22sources%22:%5B%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/App.scss%22,%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/TaskEdit.razor.scss%22,%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/Shared/Dialog.razor.scss%22,%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/Shared/TabDisplay.razor.scss%22,%22file:///C:/Users/Carter/source/repos/PersonalProjects/ProjectManagement/ProjectManagement.UI/ProjectManagement.UI/Components/ProjectEdit.razor.scss%22%5D,%22names%22:%5B%5D,%22mappings%22:%22AAEA;EACI;EACA;EACA;EACA;EACA;EACA;EACA;;;AAEJ;EACI;EACA,kBAbe;;;ACAlB;EACG;EACA;EACA;AAkBA;AACA;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;AASA;;AA3BA;EACI;;AAEJ;EACI;EACA;EACA;EACA;EACA;EACA;;AAEJ;EACI;;AAEJ;EACI;;AAaJ;EACI;EACA;EACA;;;ACnCR;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;;AAGJ;EACI;EACA;EACA;EACA;;AAEA;EACI;EACA;EACA;EACA;;AAGJ;EACI;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;EACI;;;AC1CR;EACI;EACA;;AAEA;EACI;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;EACI;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGJ;AAAA;EAEI;EACA;;AAGJ;EACI;EACA;;AAGJ;EACI;EACA;EACA;;AACA;EACI;EACA,QAvDG;EAwDH;EACA;EACA;EACA;EACA,eA5DG;;AA8DH;EACI;EACA;;AAGJ;EACI;EACA;;AAIR;EACI;;AAGJ;EACI;;AAIR;EACI,SAnFO;EAoFP;EACA;;;AChFR;EACI;;AAEA;EACI;EACA;;AACA;EACI;EACA;EACA,eAXI;EAYJ,cAfC;EAgBD;EACA;EACA;EACA;;AACA;EACI;EACA;EACA;;AAEJ;EACI;EACA;EACA;;AAGA;EACI;EACA;EACA;;AAEA;EACI,OApCZ;EAqCY,kBApChB;EAqCgB,eApCR;EAqCQ;EACA;;AAGJ;EACI,OA5CZ;;AAiDA;EACI%22%7D */

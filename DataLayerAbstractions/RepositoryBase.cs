@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -23,13 +22,14 @@ namespace DataLayerAbstractions
             model.IsDeleted = true;
             Save(model);
         }
-        public virtual void Save(TModel model)
+        public virtual int Save(TModel model)
         {
-            int key = GetModelKey(model);
+            int key = model.Id;
 
             model.UpdatedWhen = DateTime.Now;
+            DetachChildCollectionProperties(model);
 
-            if(key > 0)
+            if (key > 0)
             {
                 Update(model);
             }
@@ -37,21 +37,40 @@ namespace DataLayerAbstractions
             {
                 Add(model);
             }
-
             _dbContext.SaveChanges();
+            return model.Id;
         }
         protected virtual void Add(TModel model)
         {
-            model.CreatedWhen = DateTime.Now;
+            model.CreatedWhen = model.UpdatedWhen;
+            if (_dbSet.Find(model.Id) != null)
+            {
+                throw new Exception($"{typeof(TModel).Name} Entity already exists and cannot be added.");
+            }
             _dbSet.Add(model);
+            _dbContext.Entry(model).State = EntityState.Added;
         }
-        protected virtual void Update(TModel model) 
-        { 
+        protected virtual void Update(TModel model)
+        {
             _dbSet.Update(model);
+        }
+        private void DetachChildCollectionProperties(TModel model)
+        {
+            foreach (var property in typeof(TModel).GetProperties())
+            {
+                if (property.PropertyType == typeof(IEnumerable<ModelBase>))
+                {
+                    foreach (var childObject in (IEnumerable<ModelBase>)property.GetValue(model))
+                    {
+                        _dbContext.Entry(childObject).State = EntityState.Detached;
+                    }
+                }
+            }
         }
         public virtual TModel Get(int id)
         {
             TModel? model = _dbSet
+                .AsNoTracking()
                 .ApplyInclusion(AlwaysInclude)
                 .ApplyInclusion(IncludeOnGet)
                 .FirstOrDefault(m => m.Id == id);
@@ -64,15 +83,16 @@ namespace DataLayerAbstractions
         }
         public virtual List<TModel> GetAll()
         {
-            return _dbSet.Any() ? _dbSet
-                .Where(i => !i.IsDeleted)
+            return GetAllNoInclusions()
                 .ApplyInclusion(AlwaysInclude)
                 .ApplyInclusion(IncludeOnGetAll)
-                .ToList() : new List<TModel>();
+                .ToList();
         }
-        public virtual List<TModel> ApplyQuery()
+        public virtual IQueryable<TModel> GetAllNoInclusions()
         {
-            return _dbSet.Any() ? _dbSet.Where(i => !i.IsDeleted).ToList() : new List<TModel>();
+            return _dbSet
+                .AsNoTracking()
+                .Where(i => !i.IsDeleted);
         }
         private int GetModelKey(TModel model)
         {

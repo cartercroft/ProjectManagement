@@ -7,46 +7,50 @@ $border-radius: .33em;
     padding: .5em;
 
     .tasks {
-        margin: .5em 0;
         display: flex;
         justify-content: space-between;
-
-        .task-section {
+        .task-section-container {
+            position: relative;
             border: solid 1px;
             border-radius: $border-radius;
             border-color: $light-gray;
             flex-grow: 1;
             padding: .2em 1em;
-            height: 750px;
-            width: 400px;
-
+            margin-right: .5em;
+            justify-content: space-between;
             .task-section-header {
                 text-align: center;
                 font-weight: bold;
                 color: rgba(155, 155, 155, .8);
             }
+            .task-section {
+                height: 750px;
+                overflow-y: scroll;
+                scrollbar-width: none;
 
-            .task-list {
-                display: flex;
-                flex-direction: column;
-                height: 500px;
 
-                .task-detail {
-                    color: $dark-gray;
-                    background-color: $beige;
-                    border-radius: $border-radius;
-                    min-height: 3em;
-                    margin-bottom: .25em;
-                }
+                .task-list {
+                    display: flex;
+                    flex-direction: column;
+                    height: 500px;
 
-                .task-detail:hover {
-                    color: $dark-gray;
+                    .task-detail {
+                        color: $dark-gray;
+                        background-color: $beige;
+                        border-radius: $border-radius;
+                        min-height: 3em;
+                        margin-bottom: .25em;
+                    }
+
+                    .task-detail:hover {
+                        color: $dark-gray;
+                    }
                 }
             }
-        }
 
-        .task-section:not(:last-child) {
-            margin-right: .4em;
+            .task-section:not(:last-child) {
+                margin-right: .4em;
+            }
         }
     }
 }

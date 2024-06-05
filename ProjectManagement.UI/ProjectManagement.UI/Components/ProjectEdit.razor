@@ -2,7 +2,13 @@
 @using System.Linq
 @inject ProjectClient _client
 
-<div class="project-edit-container">
+@if (_isLoading)
+{
+    <div>Loading...</div>
+}
+else
+{    
+    <div class="project-edit-container">
     <div>
         <label>Project Name:</label>
         <InputText @bind-Value=@(Project.Name) />
@@ -10,24 +16,29 @@
     <div class="tasks">
         @foreach (var entry in _tasksByStatus)
         {
-            <div class="task-section">
-                <div class="task-section-header">@entry.Key</div>
-                <div class="task-list">
-                    @foreach (var task in entry.Value)
-                    {
-                        <button type="button" class="task-detail no-style" @onclick=@(() => OpenProjectTask(task))>
-                            @task.Title
-                        </button>
-                    }
+            <div class="task-section-container">
+                <div class="task-section-header">
+                    @entry.Key
+                </div>
+                <div class="task-section">
+                    <div class="task-list">
+                        @foreach (var task in entry.Value)
+                        {
+                            <button type="button" class="task-detail no-style" @onclick=@(() => OpenProjectTask(task))>
+                                @task.Title
+                            </button>
+                        }
+                    </div>
                 </div>
             </div>
         }
     </div>
     <button type="button" @onclick=@(HandleSaveClick)>Save</button>
     <button type="button" @onclick=@(HandleTaskAdd)>Add Task</button>
-</div>
+    </div>
 
-<TaskEditDialog @bind-Opened=@(_isTaskEditOpen) Task="_focusedTask" TaskChanged="TaskChangedCallback"></TaskEditDialog>
+    <TaskEditDialog @bind-Opened=@(_isTaskEditOpen) Task="_focusedTask" TaskChanged="TaskChangedCallback"></TaskEditDialog>
+}
 
 @code {
 
@@ -38,47 +49,44 @@
     public Func<ProjectViewModel, Task> SaveCallback { get; set; } = null!;
 
     private bool _isTaskEditOpen = false;
+    private bool _isLoading = false;
     private ProjectTaskViewModel _focusedTask = null;
 
     private Dictionary<string, List<ProjectTaskViewModel>> _tasksByStatus = null!;
 
     protected override async Task OnInitializedAsync()
     {
+        _isLoading = true;
         if (Project == null)
         {
             Project = new ProjectViewModel();
         }
 
-        if (_tasksByStatus == null)
-        {
-            _tasksByStatus = Enum.GetValues(typeof(ProjectTaskStatus))
-            .Cast<ProjectTaskStatus>()
-            .ToList()
-            .ToDictionary(s => s.GetDisplayNameString(),
-            s => Project.Tasks.Where(t => t.Status == s).ToList());
-
-            _tasksByStatus.Remove(ProjectTaskStatus.NotSet.GetDisplayNameString());
-        }
+        UpdateInternalDictionary();
+        _isLoading = false;
         await base.OnInitializedAsync();
     }
     protected internal async Task TaskChangedCallback(ProjectTaskViewModel viewModel)
     {
         string newStatus = viewModel.Status.GetDisplayNameString();
-        if (viewModel.Id <= 0)
+        if (viewModel.ProjectId <= 0)
         {
+            viewModel.ProjectId = Project.Id;
             Project.Tasks.Add(viewModel);
             _tasksByStatus[newStatus].Add(viewModel);
         }
         else
         {
-            string oldStatus = viewModel.PreviousState?.Status.GetDisplayNameString() ?? "";
             int index = _tasksByStatus[newStatus].FindIndex(t => t.Id == viewModel.Id);
             //not found in old status, we moved the task
-            if (!string.IsNullOrEmpty(oldStatus) && index == -1)
-            {
-                var oldTask = _tasksByStatus[oldStatus].FirstOrDefault(x => x.Id == viewModel.Id);
-                _tasksByStatus[oldStatus].Remove(oldTask);
-                Project.Tasks.Remove(oldTask);
+            var oldTask = viewModel.PreviousState;
+            string oldStatus = viewModel.PreviousState?.Status?.GetDisplayNameString() ?? "";
+            if (index == -1)
+            {    
+                if(!_tasksByStatus[oldStatus].Remove(viewModel))
+                {
+                    throw new Exception("Error removing Task from Dictionary. Please contact Dev.");
+                }
                 _tasksByStatus[newStatus].Add(viewModel);
             }
             else if(!string.IsNullOrEmpty(oldStatus))
@@ -93,16 +101,40 @@
         _isTaskEditOpen = false;
         await InvokeAsync(StateHasChanged);
     }
+    internal async Task UpdateInternalDictionary()
+    {
+        _tasksByStatus = new();
+
+        _tasksByStatus = Enum.GetValues(typeof(ProjectTaskStatus))
+        .Cast<ProjectTaskStatus>()
+        .ToList()
+        .ToDictionary(s => s.GetDisplayNameString(),
+        s => Project.Tasks.Where(t => t.Status == s).ToList());
+
+        _tasksByStatus.Remove(ProjectTaskStatus.NotSet.GetDisplayNameString());
+    }
     internal async Task HandleSaveClick(MouseEventArgs args)
     {
-        await _client.Save(Project);
+        _isLoading = true;
+        var response = await _client.Save(Project);
+        if (response.IsSuccess)
+        {
+            Project = response.Result;
+        }
+        else
+        {
+            throw new Exception($"Error retrieving Project after save. Contact a dev. {response.ErrorMessage}");
+        }
         await SaveCallback.Invoke(Project);
+        await UpdateInternalDictionary();
+
+        _isLoading = false;
+        await InvokeAsync(StateHasChanged);
     }
     internal async Task OpenProjectTask(ProjectTaskViewModel viewModel)
     {
         _focusedTask = viewModel;
         viewModel.PreviousState = new ProjectTaskViewModel();
-
         viewModel.PreviousState.Status = viewModel.Status;
         viewModel.PreviousState.Title = viewModel.Title;
         viewModel.PreviousState.Description = viewModel.Description;

@@ -26,14 +26,14 @@ namespace DataLayerAbstractions
             return _service.Get(id);
         }
         [HttpGet]
-        public List<TViewModel> GetAll()
+        public IEnumerable<TViewModel> GetAll()
         {
             return _service.GetAll();
         }
         [HttpPost]
-        public void Save(TViewModel viewModel)
+        public TViewModel Save(TViewModel viewModel)
         {
-            _service.Save(viewModel);
+            return _service.Save(viewModel);
         }
         [HttpPost]
         public void Delete(TViewModel viewModel)

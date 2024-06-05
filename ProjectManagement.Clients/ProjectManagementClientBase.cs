@@ -11,7 +11,7 @@ namespace ProjectManagement.Clients
         {
             return await GetAsync<List<TViewModel>>($"{GetControllerName()}/GetAll");
         }
-        public async Task<Response> Save(TViewModel model)
+        public async Task<Response<TViewModel>> Save(TViewModel model)
         {
             return await PostAsync<TViewModel>($"{GetControllerName()}/Save", model);
         }

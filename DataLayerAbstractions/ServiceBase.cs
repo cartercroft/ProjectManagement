@@ -15,14 +15,15 @@ namespace DataLayerAbstractions
             _repository = repository;
             _mapper = mapper;
         }
-        protected override void PostSave() { }
-        protected override void PreSave() { }
-        public override sealed void Save(TViewModel viewModel)
+        protected override void PostSave(TViewModel viewModel) { }
+        protected override void PreSave(TViewModel viewModel) { }
+        public override sealed TViewModel InternalSave(TViewModel viewModel)
         {
-            PreSave();
+            PreSave(viewModel);
             var model = _mapper.Map<TDataModel>(viewModel);
-            _repository.Save(model);
-            PostSave();
+            int id = _repository.Save(model);
+            PostSave(viewModel);
+            return Get(id);
         }
         public override void Delete(TViewModel viewModel)
         {
@@ -34,10 +35,11 @@ namespace DataLayerAbstractions
             var dataModel = _repository.Get(id);
             return _mapper.Map<TViewModel>(dataModel);
         }
-        public override List<TViewModel> GetAll()
+        public override IEnumerable<TViewModel> GetAll()
         {
-            return _mapper.Map<List<TViewModel>>(_repository.GetAll());
+            return _mapper.Map<IEnumerable<TViewModel>>(_repository.GetAll());
         }
+        public virtual TViewModel Save(TViewModel viewModel) => InternalSave(viewModel);
         protected TDataModel MapClientModelToDataModel(TViewModel model)
         {
             return _mapper.Map<TDataModel>(model);

@@ -6,6 +6,16 @@ namespace ProjectManagement.Repositories
 {
     public class ProjectTaskRepository : RepositoryBase<ProjectTask>
     {
-        public ProjectTaskRepository(ProjectManagementContext context) : base(context){}
+        private readonly ProjectManagementContext _context;
+        public ProjectTaskRepository(ProjectManagementContext context) : base(context)
+        {
+            _context = context;
+        }
+        public List<ProjectTask> GetProjectTasksForProject(int projectId)
+        {
+            List<ProjectTask> returnVal = new List<ProjectTask>();
+            returnVal = _context.ProjectTasks.Where(t => t.ProjectId == projectId).ToList();
+            return returnVal;
+        }
     }
 }
