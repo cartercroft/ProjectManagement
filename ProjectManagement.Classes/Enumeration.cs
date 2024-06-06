@@ -14,7 +14,8 @@ namespace ProjectManagement.Classes
             Blocked = 3,
             [Display(Name = "Pending Approval")]
             PendingApproval = 4,
-            Complete = 5
+            Complete = 5,
+            Dropped = 6
         }
     }
 }

@@ -15,15 +15,23 @@ namespace DataLayerAbstractions
             _repository = repository;
             _mapper = mapper;
         }
-        protected override void PostSave(TViewModel viewModel) { }
-        protected override void PreSave(TViewModel viewModel) { }
+        protected override void PreSave(TViewModel viewModel)
+        {
+            //RemoveChildCollections(ref viewModel);
+        }
+        protected override void PostSave(TViewModel viewModel) 
+        {
+            //Dictionary<string, List<ViewModelBase>> childCollections = GetCollectionChildProperties(viewModel);
+        }
         public override sealed TViewModel InternalSave(TViewModel viewModel)
         {
             PreSave(viewModel);
             var model = _mapper.Map<TDataModel>(viewModel);
-            int id = _repository.Save(model);
-            PostSave(viewModel);
-            return Get(id);
+            model = _repository.Save(model);
+            var newViewModel = _mapper.Map<TViewModel>(model);
+            PostSave(newViewModel);
+
+            return newViewModel;
         }
         public override void Delete(TViewModel viewModel)
         {
@@ -43,6 +51,19 @@ namespace DataLayerAbstractions
         protected TDataModel MapClientModelToDataModel(TViewModel model)
         {
             return _mapper.Map<TDataModel>(model);
+        }
+        private Dictionary<string, List<ViewModelBase>> GetCollectionChildProperties(TViewModel viewModel)
+        {
+            Dictionary<string, List<ViewModelBase>> childPropertyCollections = new();
+            foreach (var property in typeof(TViewModel).GetProperties())
+            {
+                if (typeof(IEnumerable<ViewModelBase>).IsAssignableFrom(property.PropertyType))
+                {
+                    childPropertyCollections.Add(property.Name,
+                        ((IEnumerable<ViewModelBase>)property.GetValue(viewModel)).ToList());
+                }
+            }
+            return childPropertyCollections;
         }
     }
 }

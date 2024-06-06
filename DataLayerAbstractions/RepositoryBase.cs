@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -9,10 +10,12 @@ namespace DataLayerAbstractions
     {
         private DbContext _dbContext;
         private readonly DbSet<TModel> _dbSet;
-        public RepositoryBase(DbContext context)
+        private readonly IMapper _mapper;
+        public RepositoryBase(DbContext context, IMapper mapper)
         {
             _dbContext = context;
             _dbSet = _dbContext.Set<TModel>();
+            _mapper = mapper;
         }
         protected virtual List<Expression<Func<TModel, object>>> AlwaysInclude { get; } = null!;
         protected virtual List<Expression<Func<TModel, object>>> IncludeOnGet { get; } = null!;
@@ -22,12 +25,11 @@ namespace DataLayerAbstractions
             model.IsDeleted = true;
             Save(model);
         }
-        public virtual int Save(TModel model)
+        public virtual TModel Save(TModel model)
         {
             int key = model.Id;
 
             model.UpdatedWhen = DateTime.Now;
-            DetachChildCollectionProperties(model);
 
             if (key > 0)
             {
@@ -38,7 +40,7 @@ namespace DataLayerAbstractions
                 Add(model);
             }
             _dbContext.SaveChanges();
-            return model.Id;
+            return Get(model.Id);
         }
         protected virtual void Add(TModel model)
         {
@@ -48,29 +50,19 @@ namespace DataLayerAbstractions
                 throw new Exception($"{typeof(TModel).Name} Entity already exists and cannot be added.");
             }
             _dbSet.Add(model);
-            _dbContext.Entry(model).State = EntityState.Added;
         }
         protected virtual void Update(TModel model)
         {
-            _dbSet.Update(model);
-        }
-        private void DetachChildCollectionProperties(TModel model)
-        {
-            foreach (var property in typeof(TModel).GetProperties())
-            {
-                if (property.PropertyType == typeof(IEnumerable<ModelBase>))
-                {
-                    foreach (var childObject in (IEnumerable<ModelBase>)property.GetValue(model))
-                    {
-                        _dbContext.Entry(childObject).State = EntityState.Detached;
-                    }
-                }
-            }
+            var existingModel = _dbSet.Find(model.Id);
+            if (existingModel == null)
+                throw new Exception("Tried to update a model that did not exist. Contact dev.");
+
+            existingModel = _mapper.Map(model, existingModel);
+            _dbSet.Update(existingModel);
         }
         public virtual TModel Get(int id)
         {
             TModel? model = _dbSet
-                .AsNoTracking()
                 .ApplyInclusion(AlwaysInclude)
                 .ApplyInclusion(IncludeOnGet)
                 .FirstOrDefault(m => m.Id == id);
@@ -91,7 +83,6 @@ namespace DataLayerAbstractions
         public virtual IQueryable<TModel> GetAllNoInclusions()
         {
             return _dbSet
-                .AsNoTracking()
                 .Where(i => !i.IsDeleted);
         }
         private int GetModelKey(TModel model)

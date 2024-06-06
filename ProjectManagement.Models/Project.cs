@@ -8,7 +8,6 @@ namespace ProjectManagement.Models
     {
         [Required]
         public string Name { get; set; } = null!;
-        [NotMapped]
-        public virtual ICollection<ProjectTask> Tasks { get; set; }
+        public virtual List<ProjectTask> Tasks { get; set; }
     }
 }

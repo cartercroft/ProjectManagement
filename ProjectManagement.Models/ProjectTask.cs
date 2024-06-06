@@ -11,7 +11,5 @@ namespace ProjectManagement.Models
         public Enumeration.ProjectTaskStatus Status { get; set; } = Enumeration.ProjectTaskStatus.NotSet;
         public string Description { get; set; } = null!;
         public int ProjectId { get; set; }
-        [DeleteBehavior(DeleteBehavior.Restrict)]
-        public virtual Project Project { get; set; } = null!;
     }
 }
