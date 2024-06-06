@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Repositories;
 using ProjectManagement.API;
+using ProjectManagement.Models;
+using ProjectManagement.EF;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,14 @@ builder.Services.AddDbContext<ProjectManagementContext>(opt =>
     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking),
     contextLifetime: ServiceLifetime.Scoped
 );
+builder.Services.AddIdentity<User, Role>(
+    opt =>
+    {
+        opt.SignIn.RequireConfirmedAccount = false;
+        opt.SignIn.RequireConfirmedEmail = false;
+        opt.SignIn.RequireConfirmedAccount = false;
+    })
+    .AddEntityFrameworkStores<ProjectManagementContext>();
 
 //Configure DI stuff for mapper, repos, and services.
 builder.Services.ConfigureAndAddMapper();

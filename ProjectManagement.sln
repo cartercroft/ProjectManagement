@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagement.Public.Mo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayerAbstractions", "DataLayerAbstractions\DataLayerAbstractions.csproj", "{4D176DD6-B6ED-460D-8244-0BF4CF0C31AE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagement.EF", "ProjectManagement.EF\ProjectManagement.EF.csproj", "{4C6283FA-1FFA-4AD9-A7F1-BDBB7F5C4A6F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{4D176DD6-B6ED-460D-8244-0BF4CF0C31AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D176DD6-B6ED-460D-8244-0BF4CF0C31AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D176DD6-B6ED-460D-8244-0BF4CF0C31AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C6283FA-1FFA-4AD9-A7F1-BDBB7F5C4A6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C6283FA-1FFA-4AD9-A7F1-BDBB7F5C4A6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C6283FA-1FFA-4AD9-A7F1-BDBB7F5C4A6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C6283FA-1FFA-4AD9-A7F1-BDBB7F5C4A6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

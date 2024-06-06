@@ -1,14 +1,19 @@
 using ProjectManagement.UI;
-using ProjectManagement.UI.Components;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDefaultIdentity<IdentityUser>
+    (options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<ProjectManagement.EF.ProjectManagementContext>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.AddConfiguredHttpClients();
-builder.Services.AddClients();
+builder.Services.AddProjectManagementClients();
 
 var app = builder.Build();
 
@@ -28,6 +33,9 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

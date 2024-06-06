@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Models;
 
-namespace ProjectManagement.Repositories
+namespace ProjectManagement.EF
 {
-    public class ProjectManagementContext : DbContext
+    public class ProjectManagementContext : IdentityDbContext<User, Role, Guid>
     {
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectTask> ProjectTasks { get; set; }
