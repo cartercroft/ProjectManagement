@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DataLayerAbstractions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DataLayerAbstractions
 {
@@ -21,21 +22,25 @@ namespace DataLayerAbstractions
             _service = service;
         }
         [HttpGet]
+        [Authorize]
         public TViewModel Get(int id)
         {
             return _service.Get(id);
         }
         [HttpGet]
+        [Authorize]
         public IEnumerable<TViewModel> GetAll()
         {
             return _service.GetAll();
         }
         [HttpPost]
+        [Authorize]
         public TViewModel Save(TViewModel viewModel)
         {
             return _service.Save(viewModel);
         }
         [HttpPost]
+        [Authorize]
         public void Delete(TViewModel viewModel)
         {
             _service.Delete(viewModel);

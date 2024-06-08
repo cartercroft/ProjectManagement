@@ -3,6 +3,7 @@ using ProjectManagement.Repositories;
 using ProjectManagement.API;
 using ProjectManagement.Models;
 using ProjectManagement.EF;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,13 +19,9 @@ builder.Services.AddDbContext<ProjectManagementContext>(opt =>
     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking),
     contextLifetime: ServiceLifetime.Scoped
 );
-builder.Services.AddIdentity<User, Role>(
-    opt =>
-    {
-        opt.SignIn.RequireConfirmedAccount = false;
-        opt.SignIn.RequireConfirmedEmail = false;
-        opt.SignIn.RequireConfirmedAccount = false;
-    })
+
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<User>()
     .AddEntityFrameworkStores<ProjectManagementContext>();
 
 //Configure DI stuff for mapper, repos, and services.
@@ -40,6 +37,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapIdentityApi<User>();
 
 app.UseHttpsRedirection();
 

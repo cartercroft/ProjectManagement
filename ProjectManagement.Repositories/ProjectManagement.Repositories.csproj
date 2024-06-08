@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataLayerAbstractions\DataLayerAbstractions.csproj" />
+    <ProjectReference Include="..\DataLayerAbstractions\LayerAbstractions.csproj" />
     <ProjectReference Include="..\ProjectManagement.Classes\ProjectManagement.Classes.csproj" />
     <ProjectReference Include="..\ProjectManagement.EF\ProjectManagement.EF.csproj" />
     <ProjectReference Include="..\ProjectManagement.Models\ProjectManagement.Models.csproj" />

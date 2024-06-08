@@ -30,6 +30,14 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Components\Shared\Dialog.razor" />
+    <None Include="Components\Shared\TabDisplay.razor" />
+    <None Include="Components\Shared\TabPage.razor" />
+    <None Include="Components\Shared\TypedTabDisplay.razor" />
+    <None Include="Components\Shared\TypedTabPage.razor" />
+  </ItemGroup>
+
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="del $(TargetDir)..\..\..\wwwroot\app.css" />
   </Target>

@@ -6,8 +6,8 @@ namespace ProjectManagement.EF
 {
     public class ProjectManagementContext : IdentityDbContext<User, Role, Guid>
     {
-        public DbSet<Project> Projects { get; set; }
-        public DbSet<ProjectTask> ProjectTasks { get; set; }
+        public DbSet<Project> PM_Projects { get; set; }
+        public DbSet<ProjectTask> PM_Tasks { get; set; }
         public ProjectManagementContext(DbContextOptions<ProjectManagementContext> options) : base(options)
         {
         

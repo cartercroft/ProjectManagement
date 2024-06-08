@@ -1,19 +1,33 @@
 using ProjectManagement.UI;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Components.Authorization;
+using ProjectManagement.UI.Components.Account;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDefaultIdentity<IdentityUser>
-    (options => options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<ProjectManagement.EF.ProjectManagementContext>();
-
+//builder.Services.AddDefaultIdentity<IdentityUser>
+//    (options => options.SignIn.RequireConfirmedAccount = false);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<IdentityUserAccessor>();
+builder.Services.AddScoped<IdentityRedirectManager>();
+builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+})
+    .AddIdentityCookies();
+
 builder.AddConfiguredHttpClients();
 builder.Services.AddProjectManagementClients();
+builder.Services.AddAuthenticationCore();
+builder.Services.AddAuthorizationCore();
 
 var app = builder.Build();
 
@@ -39,5 +53,7 @@ app.UseAuthorization();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+app.MapAdditionalIdentityEndpoints();
 
 app.Run();
