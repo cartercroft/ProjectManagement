@@ -13,9 +13,9 @@ namespace ProjectManagement.Clients
             _client = client;
         }
 
-        public async Task<Response<TResponse>> PostAsync<TResponse>(string endpoint, object bodyContent)
+        public virtual async Task<Response<TResponse>> PostAsync<TResponse>(string endpoint, object bodyContent, Dictionary<string, string>? headers = null)
         {
-            HttpContent content = GetHttpContent(bodyContent);
+            HttpContent content = GetHttpContent(bodyContent, headers);
             var result = await _client.PostAsync(endpoint, content);
             Response<TResponse> response = new Response<TResponse>();
             if (!result.IsSuccessStatusCode)
@@ -28,10 +28,9 @@ namespace ProjectManagement.Clients
             }
             return response;
         }
-
-        public async Task<Response> PostAsync(string endpoint, object bodyContent)
+        public virtual async Task<Response> PostAsyncNoResponseObject(string endpoint, object bodyContent, Dictionary<string, string>? headers = null)
         {
-            HttpContent content = GetHttpContent(bodyContent);
+            HttpContent content = GetHttpContent(bodyContent, headers);
             var result = await _client.PostAsync(endpoint, content);
 
             Response response = new Response();
@@ -41,13 +40,14 @@ namespace ProjectManagement.Clients
             }
             return response;
         }
-        public async Task<Response<TResponse>> GetAsync<TResponse>(string endpoint)
+        public virtual async Task<Response<TResponse>> GetAsync<TResponse>(string endpoint, Dictionary<string, object>? pathParameters = null, Dictionary<string, string>? headers = null)
         {
-            return await GetAsync<TResponse>(endpoint, null);
-        }
-        public async Task<Response<TResponse>> GetAsync<TResponse>(string endpoint, Dictionary<string, object>? pathParameters)
-        {
-            var result = await _client.GetAsync($"{endpoint}{GetPathParametersAsString(pathParameters)}");
+            string requestUri = $"{_client.BaseAddress}{endpoint}{GetPathParametersAsString(pathParameters)}";
+            HttpRequestMessage getRequest = new HttpRequestMessage(HttpMethod.Get, requestUri);
+
+            getRequest = AddHttpRequestMessageHeaders(getRequest, headers);
+            var result = await _client.SendAsync(getRequest);
+
             Response<TResponse> response = new Response<TResponse>();
             if (!result.IsSuccessStatusCode)
             {
@@ -65,7 +65,7 @@ namespace ProjectManagement.Clients
             using StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8);
             string responseBody = await readStream.ReadToEndAsync();
             readStream.BaseStream.Seek(0, SeekOrigin.Begin);
-            TResponse response = JsonConvert.DeserializeObject<TResponse>(responseBody);
+            TResponse? response = JsonConvert.DeserializeObject<TResponse>(responseBody);
             return response;
         }
         private string GetPathParametersAsString(Dictionary<string, object>? pathParameters)
@@ -89,16 +89,39 @@ namespace ProjectManagement.Clients
             }
             return builder.ToString();
         }
-        private static HttpContent GetHttpContent(object bodyContent)
+        private static HttpContent GetHttpContentBody(object bodyContent)
         {
             string body = JsonConvert.SerializeObject(bodyContent);
             HttpContent content = new StringContent(body);
             content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(MediaTypeNames.Application.Json);
             return content;
         }
+        private static HttpContent GetHttpContent(object bodyContent, Dictionary<string, string>? headers)
+        {
+            var content = GetHttpContentBody(bodyContent);
+            if(headers != null)
+            {
+                foreach(var entry in headers)
+                {
+                    content.Headers.Add(entry.Key, entry.Value);
+                }
+            }
+            return content;
+        }
         private string GetRequestErrorMessage(HttpResponseMessage httpResponseMessage)
         {
-            return $"Error calling {httpResponseMessage.RequestMessage.RequestUri}\n\nError: {httpResponseMessage.ReasonPhrase}";
+            return $"Error calling {httpResponseMessage.RequestMessage?.RequestUri}\n\nError: {httpResponseMessage.ReasonPhrase}";
+        }
+        private HttpRequestMessage AddHttpRequestMessageHeaders(HttpRequestMessage httpRequestMessage, Dictionary<string, string>? headers = null) 
+        {
+            if(headers != null)
+            {
+                foreach(var entry in headers)
+                {
+                    httpRequestMessage.Headers.Add(entry.Key, entry.Value);
+                }
+            }
+            return httpRequestMessage;
         }
     }
 }

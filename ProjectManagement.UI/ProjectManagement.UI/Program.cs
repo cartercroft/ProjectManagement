@@ -2,7 +2,8 @@ using ProjectManagement.UI;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Components.Authorization;
-using ProjectManagement.UI.Components.Account;
+using Microsoft.AspNetCore.Authentication;
+using ProjectManagement.Classes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,17 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddScoped<IdentityUserAccessor>();
-builder.Services.AddScoped<IdentityRedirectManager>();
-builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = IdentityConstants.ApplicationScheme;
-    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-})
-    .AddIdentityCookies();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<TokenProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider,
+    CustomAuthenticationStateProvider>();
 
 builder.AddConfiguredHttpClients();
 builder.Services.AddProjectManagementClients();
@@ -53,7 +47,5 @@ app.UseAuthorization();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
-
-app.MapAdditionalIdentityEndpoints();
 
 app.Run();

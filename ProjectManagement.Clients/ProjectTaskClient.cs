@@ -1,12 +1,8 @@
-﻿using Newtonsoft.Json;
-using ProjectManagement.Classes;
-using ProjectManagement.Models;
-using ProjectManagement.Public.Models;
-using System.Net.Http.Headers;
+﻿using ProjectManagement.Public.Models;
 
 namespace ProjectManagement.Clients
 {
-    public class ProjectTaskClient : ProjectManagementClientBase<ProjectTaskViewModel>
+    public class ProjectTaskClient : CRUDClientBase<ProjectTaskViewModel>
     {
         public ProjectTaskClient(IHttpClientFactory httpClientFactory) : base(httpClientFactory){}
     }

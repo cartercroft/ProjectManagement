@@ -1,33 +1,38 @@
 ﻿using ProjectManagement.Classes;
-using ProjectManagement.Public.Models;
 
 namespace ProjectManagement.Clients
 {
-    public class ProjectManagementClientBase<TViewModel> : ClientBase
+    public class ProjectManagementClientBase : ClientBase
     {
         private string p_ControllerName = null!;
         public ProjectManagementClientBase(IHttpClientFactory httpClientFactory) : base(httpClientFactory.CreateClient("ProjectManagementClient")){}
-        public async Task<Response<List<TViewModel>>> GetAll()
+        public ProjectManagementClientBase(IHttpClientFactory httpClientFactory, string controllerName) : base(httpClientFactory.CreateClient("ProjectManagementClient")) 
         {
-            return await GetAsync<List<TViewModel>>($"{GetControllerName()}/GetAll");
+            p_ControllerName = controllerName;
         }
-        public async Task<Response<TViewModel>> Save(TViewModel model)
+
+        public override async Task<Response<TResponse>> PostAsync<TResponse>(string endpoint, object bodyContent, Dictionary<string, string>? headers = null)
         {
-            return await PostAsync<TViewModel>($"{GetControllerName()}/Save", model);
+            return await base.PostAsync<TResponse>(GetEndpointWithControllerName(endpoint), bodyContent, headers);
         }
-        public async Task<Response> Delete (TViewModel model)
+        public override async Task<Response<TResponse>> GetAsync<TResponse>(string endpoint, Dictionary<string, object>? pathParameters = null, Dictionary<string, string>? headers = null)
         {
-            return await PostAsync<TViewModel>($"{GetControllerName()}/Delete", model);
+            return await base.GetAsync<TResponse>(GetEndpointWithControllerName(endpoint), pathParameters, headers);
         }
         private string GetRuntimeClassName()
         {
             return this.GetType().Name;
         }
-        private string GetControllerName()
+        protected string GetControllerName()
         {
             if (p_ControllerName == null)
                 p_ControllerName = GetRuntimeClassName().Replace("Client", "");
             return p_ControllerName;
+        }
+        protected string GetEndpointWithControllerName(string endpoint)
+        {
+            string controllerName = GetControllerName();
+            return $"{(!string.IsNullOrEmpty(controllerName) ? $"{controllerName}/{endpoint}" : endpoint)}";
         }
     }
 }

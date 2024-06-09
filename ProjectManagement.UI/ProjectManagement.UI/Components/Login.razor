@@ -1,0 +1,34 @@
+﻿@inject AuthClient _authClient
+<div>
+    <div>
+        <label>
+            Email:
+        </label>
+        <InputText @bind-Value=@(_loginModel.Username)/>
+    </div>
+    <div>
+        <label>
+            Password:
+        </label>
+        <InputText @bind-Value=@(_loginModel.Password) />
+    </div>
+    <button type="button" @onclick=@(HandleLoginClick)>Log In</button>
+</div>
+
+@code{
+    private class UserLoginModel {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+    private UserLoginModel _loginModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _loginModel = new();
+        await base.OnInitializedAsync();
+    }
+    private async Task HandleLoginClick(MouseEventArgs args)
+    {
+        await _authClient.SignIn(_loginModel.Username, _loginModel.Password);
+    }
+}

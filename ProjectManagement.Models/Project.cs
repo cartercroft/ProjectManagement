@@ -8,6 +8,6 @@ namespace ProjectManagement.Models
     {
         [Required]
         public string Name { get; set; } = null!;
-        public virtual List<ProjectTask> Tasks { get; set; }
+        public virtual List<ProjectTask> Tasks { get; set; } = new List<ProjectTask>();
     }
 }

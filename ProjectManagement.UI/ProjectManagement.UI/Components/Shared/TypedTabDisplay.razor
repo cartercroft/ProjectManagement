@@ -72,7 +72,7 @@
         }
         await InvokeAsync(StateHasChanged);
     }
-    internal async Task HandleDeleteClick(TTabItem tabItem)
+    internal async Task HandleDeleteClick(TTabItem? tabItem)
     {
         if (OnDelete != null)
         {

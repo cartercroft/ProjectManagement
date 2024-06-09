@@ -52,18 +52,18 @@ namespace DataLayerAbstractions
         {
             return _mapper.Map<TDataModel>(model);
         }
-        private Dictionary<string, List<ViewModelBase>> GetCollectionChildProperties(TViewModel viewModel)
-        {
-            Dictionary<string, List<ViewModelBase>> childPropertyCollections = new();
-            foreach (var property in typeof(TViewModel).GetProperties())
-            {
-                if (typeof(IEnumerable<ViewModelBase>).IsAssignableFrom(property.PropertyType))
-                {
-                    childPropertyCollections.Add(property.Name,
-                        ((IEnumerable<ViewModelBase>)property.GetValue(viewModel)).ToList());
-                }
-            }
-            return childPropertyCollections;
-        }
+        //private Dictionary<string, List<ViewModelBase>> GetCollectionChildProperties(TViewModel viewModel)
+        //{
+        //    Dictionary<string, List<ViewModelBase>> childPropertyCollections = new();
+        //    foreach (var property in typeof(TViewModel).GetProperties())
+        //    {
+        //        if (typeof(IEnumerable<ViewModelBase>).IsAssignableFrom(property.PropertyType))
+        //        {
+        //            childPropertyCollections.Add(property.Name,
+        //                ((IEnumerable<ViewModelBase>)property.GetValue(viewModel)).ToList());
+        //        }
+        //    }
+        //    return childPropertyCollections;
+        //}
     }
 }
