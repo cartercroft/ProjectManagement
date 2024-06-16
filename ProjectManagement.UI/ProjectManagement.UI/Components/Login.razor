@@ -1,4 +1,5 @@
-﻿@inject AuthClient _authClient
+﻿@using ProjectManagement.Classes
+@inject ILoginManager _loginManager
 <div>
     <div>
         <label>
@@ -29,6 +30,6 @@
     }
     private async Task HandleLoginClick(MouseEventArgs args)
     {
-        await _authClient.SignIn(_loginModel.Username, _loginModel.Password);
+        await _loginManager.Login(_loginModel.Username, _loginModel.Password);
     }
 }

@@ -1,8 +1,5 @@
 using ProjectManagement.UI;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Authentication;
 using ProjectManagement.Classes;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,9 +11,9 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<TokenProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider,
     CustomAuthenticationStateProvider>();
+builder.Services.AddScoped<ILoginManager, CustomAuthenticationStateProvider>();
 
 builder.AddConfiguredHttpClients();
 builder.Services.AddProjectManagementClients();

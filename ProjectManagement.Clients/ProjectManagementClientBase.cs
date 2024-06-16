@@ -13,10 +13,12 @@ namespace ProjectManagement.Clients
 
         public override async Task<Response<TResponse>> PostAsync<TResponse>(string endpoint, object bodyContent, Dictionary<string, string>? headers = null)
         {
+            AddAuthToken(ref headers);
             return await base.PostAsync<TResponse>(GetEndpointWithControllerName(endpoint), bodyContent, headers);
         }
         public override async Task<Response<TResponse>> GetAsync<TResponse>(string endpoint, Dictionary<string, object>? pathParameters = null, Dictionary<string, string>? headers = null)
         {
+            AddAuthToken(ref headers);
             return await base.GetAsync<TResponse>(GetEndpointWithControllerName(endpoint), pathParameters, headers);
         }
         private string GetRuntimeClassName()
@@ -28,6 +30,15 @@ namespace ProjectManagement.Clients
             if (p_ControllerName == null)
                 p_ControllerName = GetRuntimeClassName().Replace("Client", "");
             return p_ControllerName;
+        }
+        private void AddAuthToken(ref Dictionary<string, string>? headers)
+        {
+            if(headers == null)
+                headers = new Dictionary<string, string>();
+            if (!headers.ContainsKey("Authorization")) 
+            {
+                //headers.Add("Authorization", _tokenProvider.AccessToken);
+            }
         }
         protected string GetEndpointWithControllerName(string endpoint)
         {

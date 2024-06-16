@@ -6,6 +6,7 @@ namespace ProjectManagement.Classes
     {
         public event Action<ClaimsPrincipal>? UserChanged;
         private ClaimsPrincipal? _currentUser;
+
         public ClaimsPrincipal CurrentUser
         {
             get { return _currentUser ?? new(); }
