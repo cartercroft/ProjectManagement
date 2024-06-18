@@ -1,0 +1,24 @@
+﻿@using ProjectManagement.Classes
+@inject IToastService _toastService
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = null!;
+
+    protected void HandleError(string errorMessage)
+    {
+        _toastService.ShowError(errorMessage);
+    }
+    protected void ShowInfo(string infoMessage)
+    {
+        _toastService.ShowInfo(infoMessage);
+    }
+    protected void ShowWarning(string warningMessage)
+    {
+        _toastService.ShowWarning(warningMessage);
+    }
+    protected void ShowSuccess(string successMessage)
+    {
+        _toastService.ShowSuccess(successMessage);
+    }
+}

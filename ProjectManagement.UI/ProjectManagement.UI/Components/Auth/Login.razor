@@ -1,5 +1,8 @@
-﻿@using ProjectManagement.Classes
+﻿@page "/Login"
+@using ProjectManagement.Classes
+@inherits ProjectManagementComponentBase
 @inject ILoginManager _loginManager
+@inject NavigationManager _navManager
 <div>
     <div>
         <label>
@@ -14,6 +17,7 @@
         <InputText @bind-Value=@(_loginModel.Password) />
     </div>
     <button type="button" @onclick=@(HandleLoginClick)>Log In</button>
+    <button type="button" @onclick=@(NavigateToRegister)>Register</button>
 </div>
 
 @code{
@@ -30,6 +34,20 @@
     }
     private async Task HandleLoginClick(MouseEventArgs args)
     {
-        await _loginManager.Login(_loginModel.Username, _loginModel.Password);
+        ShowInfo("Logging in...");
+        bool isLoginSuccess = await _loginManager.Login(_loginModel.Username, _loginModel.Password);
+        if (isLoginSuccess)
+        {
+            ShowSuccess("Logged in!");
+            _navManager.NavigateTo("/Projects");
+        }
+        else
+        {
+            ShowWarning("Invalid username or password.");
+        }
+    }
+    private void NavigateToRegister(MouseEventArgs args)
+    {
+        _navManager.NavigateTo("/Register");
     }
 }

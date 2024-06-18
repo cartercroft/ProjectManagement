@@ -12,8 +12,8 @@ using ProjectManagement.EF;
 namespace ProjectManagement.Repositories.Migrations
 {
     [DbContext(typeof(ProjectManagementContext))]
-    [Migration("20240608073628_Identity")]
-    partial class Identity
+    [Migration("20240617050443_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

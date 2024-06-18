@@ -1,5 +1,6 @@
 ﻿
 using ProjectManagement.Classes;
+using ProjectManagement.Public.Models;
 using System.Security.Claims;
 
 namespace ProjectManagement.Clients
@@ -11,13 +12,16 @@ namespace ProjectManagement.Clients
         {
             _authService = authService;
         }
-        public async Task<ClaimsPrincipal?> SignIn(string email, string password)
+        public async Task<SignInResultModel> SignIn(string email, string password)
         {
+            SignInResultModel result = new SignInResultModel();
             var response = await PostAsync<TokenProvider>("login", new {email = email, password = password});
             if(!response.IsSuccess || response.Result == null)
                 return null;
 
             TokenProvider? tokenProvider = response.Result;
+            result.Tokens = tokenProvider;
+
             var profileHeaders = new Dictionary<string, string>();
             profileHeaders.Add("Authorization", $"Bearer {tokenProvider?.AccessToken}");
 
@@ -26,12 +30,18 @@ namespace ProjectManagement.Clients
                 return null;
 
             var userProfile = userProfileRequest.Result;
-            return new ClaimsPrincipal(
+            result.ClaimsPrincipal = new ClaimsPrincipal(
                 new ClaimsIdentity(userProfile
                 .Claims
                 .Select(c => new Claim(c.Key, c.Value))
-                .ToList())   
+                .ToList(), "Default")   
             );
+
+            return result;
+        }
+        public async Task<Response> Register(RegisterRequestModel model)
+        {
+            return await PostAsync("Register", model);
         }
     }
 }

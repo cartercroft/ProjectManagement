@@ -19,6 +19,7 @@ builder.Services.AddDbContext<ProjectManagementContext>(opt =>
     contextLifetime: ServiceLifetime.Scoped
 );
 
+builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<User>()
     .AddEntityFrameworkStores<ProjectManagementContext>();

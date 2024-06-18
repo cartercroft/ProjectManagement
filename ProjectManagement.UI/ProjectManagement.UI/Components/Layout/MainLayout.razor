@@ -1,15 +1,16 @@
-﻿@inherits LayoutComponentBase
+﻿@using ProjectManagement.UI.Components.Auth
+@inherits LayoutComponentBase
 
-<AuthorizeView>
-    <Authorized>
-        @Body
-    </Authorized>
-    <NotAuthorized>
-        <Login />
-    </NotAuthorized>
-</AuthorizeView>
+@Body
+
 <div id="blazor-error-ui">
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+<BlazoredToasts MaxToastCount="10"
+    Timeout="10"
+    RemoveToastsOnNavigation=false
+    ShowProgressBar=true
+/>

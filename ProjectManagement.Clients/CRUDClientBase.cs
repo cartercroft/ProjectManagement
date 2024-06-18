@@ -1,10 +1,14 @@
-﻿using ProjectManagement.Classes;
+﻿using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using ProjectManagement.Classes;
 
 namespace ProjectManagement.Clients
 {
     public class CRUDClientBase<TViewModel> : ProjectManagementClientBase
     {
-        public CRUDClientBase(IHttpClientFactory httpClientFactory) : base(httpClientFactory){}
+        public CRUDClientBase(
+            IHttpClientFactory httpClientFactory,
+            ProtectedSessionStorage sessionStorage
+            ) : base(httpClientFactory, sessionStorage){}
 
         public async Task<Response<List<TViewModel>>> GetAll()
         {

@@ -6,13 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjectManagement.Repositories.Migrations
 {
     /// <inheritdoc />
-    public partial class Identity : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameTable("Projects", newName: "PM_Projects");
-            migrationBuilder.RenameTable("ProjectTasks", newName: "PM_Tasks");
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -50,6 +48,22 @@ namespace ProjectManagement.Repositories.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PM_Projects",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedWhen = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedWhen = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PM_Projects", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,6 +171,32 @@ namespace ProjectManagement.Repositories.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "PM_Tasks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProjectId = table.Column<int>(type: "int", nullable: false),
+                    CreatedWhen = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedWhen = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PM_Tasks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PM_Tasks_PM_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "PM_Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -205,10 +245,6 @@ namespace ProjectManagement.Repositories.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameTable("PM_Projects", newName: "Projects");
-
-            migrationBuilder.RenameTable("PM_Tasks", newName: "ProjectTasks");
-            
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -224,6 +260,8 @@ namespace ProjectManagement.Repositories.Migrations
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
 
+            migrationBuilder.DropTable(
+                name: "PM_Tasks");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -231,6 +269,8 @@ namespace ProjectManagement.Repositories.Migrations
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
+            migrationBuilder.DropTable(
+                name: "PM_Projects");
         }
     }
 }

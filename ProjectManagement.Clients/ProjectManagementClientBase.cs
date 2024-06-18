@@ -1,24 +1,37 @@
-﻿using ProjectManagement.Classes;
+﻿using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using ProjectManagement.Classes;
 
 namespace ProjectManagement.Clients
 {
     public class ProjectManagementClientBase : ClientBase
     {
-        private string p_ControllerName = null!;
-        public ProjectManagementClientBase(IHttpClientFactory httpClientFactory) : base(httpClientFactory.CreateClient("ProjectManagementClient")){}
-        public ProjectManagementClientBase(IHttpClientFactory httpClientFactory, string controllerName) : base(httpClientFactory.CreateClient("ProjectManagementClient")) 
+        private string _controllerName = null!;
+        private readonly ProtectedSessionStorage _sessionStorage = null!;
+        public ProjectManagementClientBase(
+            IHttpClientFactory httpClientFactory,
+            ProtectedSessionStorage sessionStorage
+            ) : base(httpClientFactory.CreateClient("ProjectManagementClient"))
         {
-            p_ControllerName = controllerName;
+            _sessionStorage = sessionStorage;
+        }
+        public ProjectManagementClientBase(
+            IHttpClientFactory httpClientFactory,
+            ProtectedSessionStorage sessionStorage,
+            string controllerName
+            ) : base(httpClientFactory.CreateClient("ProjectManagementClient"))
+        {
+            _controllerName = controllerName;
+            _sessionStorage = sessionStorage;
         }
 
         public override async Task<Response<TResponse>> PostAsync<TResponse>(string endpoint, object bodyContent, Dictionary<string, string>? headers = null)
         {
-            AddAuthToken(ref headers);
+            headers = await AddAuthToken(headers);
             return await base.PostAsync<TResponse>(GetEndpointWithControllerName(endpoint), bodyContent, headers);
         }
         public override async Task<Response<TResponse>> GetAsync<TResponse>(string endpoint, Dictionary<string, object>? pathParameters = null, Dictionary<string, string>? headers = null)
         {
-            AddAuthToken(ref headers);
+            headers = await AddAuthToken(headers);
             return await base.GetAsync<TResponse>(GetEndpointWithControllerName(endpoint), pathParameters, headers);
         }
         private string GetRuntimeClassName()
@@ -27,18 +40,23 @@ namespace ProjectManagement.Clients
         }
         protected string GetControllerName()
         {
-            if (p_ControllerName == null)
-                p_ControllerName = GetRuntimeClassName().Replace("Client", "");
-            return p_ControllerName;
+            if (_controllerName == null)
+                _controllerName = GetRuntimeClassName().Replace("Client", "");
+            return _controllerName;
         }
-        private void AddAuthToken(ref Dictionary<string, string>? headers)
+        private async Task<Dictionary<string,string>?> AddAuthToken(Dictionary<string, string>? headers)
         {
-            if(headers == null)
+            if (headers == null)
                 headers = new Dictionary<string, string>();
-            if (!headers.ContainsKey("Authorization")) 
+            if (!headers.ContainsKey("Authorization"))
             {
-                //headers.Add("Authorization", _tokenProvider.AccessToken);
+                var sessionEntry = await _sessionStorage.GetAsync<string>("AuthToken");
+                if(sessionEntry.Success && sessionEntry.Value != null)
+                {
+                    headers.Add("Authorization", $"Bearer {sessionEntry.Value}");
+                }
             }
+            return headers;
         }
         protected string GetEndpointWithControllerName(string endpoint)
         {

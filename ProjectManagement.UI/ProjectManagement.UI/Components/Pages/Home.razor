@@ -1,7 +1,11 @@
 ﻿@page "/"
+@page "/Projects"
+@using Microsoft.AspNetCore.Authorization
 @inject ProjectClient _projectClient
+@inherits AuthorizedComponentBase
 
-<PageTitle>Home</PageTitle>
+<PageTitle>My Projects</PageTitle>
+
 @if (_isLoading)
 {
     <p>Loading...</p>
@@ -10,7 +14,7 @@ else
 {
     <div style="padding: 10px;" @key=@(Projects.Count)>
         <TypedTabDisplay TTabItem="ProjectViewModel" EnableAdding OnAddAsync="HandleOpenProjectEdit" EnableDelete OnDeleteAsync="HandleDeleteDialogOpen">
-            @foreach(var project in Projects)
+            @foreach (var project in Projects)
             {
                 <TypedTabPage TabItem="project" Text="@project.Name">
                     <ProjectEdit Project="@project" SaveCallback="HandleProjectEdit"></ProjectEdit>
@@ -22,7 +26,8 @@ else
 
 <ProjectAddDialog @bind-Opened=@(_editDialogOpened) SaveCallback="HandleProjectAdd"></ProjectAddDialog>
 <ProjectDeleteDialog Project="@_projectToDelete" @bind-Opened=@(_deleteDialogOpened) DeleteCallback="HandleProjectDelete"></ProjectDeleteDialog>
-@code{
+
+@code {
     [Parameter]
     public List<ProjectViewModel> Projects { get; set; } = new();
     private bool _editDialogOpened = false;
@@ -32,6 +37,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
         await GetProjects();
     }
     private async Task GetProjects()
@@ -40,21 +46,22 @@ else
         var result = await _projectClient.GetAll();
         if (result.IsSuccess)
         {
-            Projects = result.Result;
+            Projects = result.Result ?? new List<ProjectViewModel>();
         }
         else
         {
-            throw new Exception(result.ErrorMessage);
+            HandleError($"Error: {result.ErrorMessage}");
         }
         _isLoading = false;
     }
-    private async Task HandleOpenProjectEdit() {
+    private async Task HandleOpenProjectEdit()
+    {
         _editDialogOpened = true;
         await InvokeAsync(StateHasChanged);
     }
     private async Task HandleProjectEdit(ProjectViewModel viewModel)
     {
-        if(viewModel.Id == 0)
+        if (viewModel.Id == 0)
         {
             await HandleProjectAdd(viewModel);
         }
@@ -82,7 +89,7 @@ else
         if (!response.IsSuccess)
         {
             Projects.Add(viewModel);
-            throw new Exception($"Error deleting project: {response.ErrorMessage}");
+            HandleError($"Error deleting project: {response.ErrorMessage}");
         }
         await InvokeAsync(StateHasChanged);
     }
