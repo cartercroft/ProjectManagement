@@ -1,33 +1,67 @@
-﻿using ProjectManagement.Classes;
-using ProjectManagement.Public.Models;
+﻿using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using ProjectManagement.Classes;
 
 namespace ProjectManagement.Clients
 {
-    public class ProjectManagementClientBase<TViewModel> : ClientBase
+    public class ProjectManagementClientBase : ClientBase
     {
-        private string p_ControllerName = null!;
-        public ProjectManagementClientBase(IHttpClientFactory httpClientFactory) : base(httpClientFactory.CreateClient("ProjectManagementClient")){}
-        public async Task<Response<List<TViewModel>>> GetAll()
+        private string _controllerName = null!;
+        private readonly ProtectedSessionStorage _sessionStorage = null!;
+        public ProjectManagementClientBase(
+            IHttpClientFactory httpClientFactory,
+            ProtectedSessionStorage sessionStorage
+            ) : base(httpClientFactory.CreateClient("ProjectManagementClient"))
         {
-            return await GetAsync<List<TViewModel>>($"{GetControllerName()}/GetAll");
+            _sessionStorage = sessionStorage;
         }
-        public async Task<Response<TViewModel>> Save(TViewModel model)
+        public ProjectManagementClientBase(
+            IHttpClientFactory httpClientFactory,
+            ProtectedSessionStorage sessionStorage,
+            string controllerName
+            ) : base(httpClientFactory.CreateClient("ProjectManagementClient"))
         {
-            return await PostAsync<TViewModel>($"{GetControllerName()}/Save", model);
+            _controllerName = controllerName;
+            _sessionStorage = sessionStorage;
         }
-        public async Task<Response> Delete (TViewModel model)
+
+        public override async Task<Response<TResponse>> PostAsync<TResponse>(string endpoint, object bodyContent, Dictionary<string, string>? headers = null)
         {
-            return await PostAsync<TViewModel>($"{GetControllerName()}/Delete", model);
+            headers = await AddAuthToken(headers);
+            return await base.PostAsync<TResponse>(GetEndpointWithControllerName(endpoint), bodyContent, headers);
+        }
+        public override async Task<Response<TResponse>> GetAsync<TResponse>(string endpoint, Dictionary<string, object>? pathParameters = null, Dictionary<string, string>? headers = null)
+        {
+            headers = await AddAuthToken(headers);
+            return await base.GetAsync<TResponse>(GetEndpointWithControllerName(endpoint), pathParameters, headers);
         }
         private string GetRuntimeClassName()
         {
             return this.GetType().Name;
         }
-        private string GetControllerName()
+        protected string GetControllerName()
         {
-            if (p_ControllerName == null)
-                p_ControllerName = GetRuntimeClassName().Replace("Client", "");
-            return p_ControllerName;
+            if (_controllerName == null)
+                _controllerName = GetRuntimeClassName().Replace("Client", "");
+            return _controllerName;
+        }
+        private async Task<Dictionary<string,string>?> AddAuthToken(Dictionary<string, string>? headers)
+        {
+            if (headers == null)
+                headers = new Dictionary<string, string>();
+            if (!headers.ContainsKey("Authorization"))
+            {
+                var sessionEntry = await _sessionStorage.GetAsync<string>("AuthToken");
+                if(sessionEntry.Success && sessionEntry.Value != null)
+                {
+                    headers.Add("Authorization", $"Bearer {sessionEntry.Value}");
+                }
+            }
+            return headers;
+        }
+        protected string GetEndpointWithControllerName(string endpoint)
+        {
+            string controllerName = GetControllerName();
+            return $"{(!string.IsNullOrEmpty(controllerName) ? $"{controllerName}/{endpoint}" : endpoint)}";
         }
     }
 }

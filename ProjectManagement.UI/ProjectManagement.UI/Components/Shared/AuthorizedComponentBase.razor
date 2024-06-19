@@ -1,0 +1,12 @@
+﻿@inherits ProjectManagementComponentBase
+
+<AuthorizeView>
+    <Authorized>
+        @ChildContent
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin />
+    </NotAuthorized>
+</AuthorizeView>
+
+@code{}

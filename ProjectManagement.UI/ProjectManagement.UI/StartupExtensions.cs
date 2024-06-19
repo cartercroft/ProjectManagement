@@ -5,10 +5,11 @@ namespace ProjectManagement.UI
 {
     public static class StartupExtensions
     {
-        public static IServiceCollection AddClients(this IServiceCollection services)
+        public static IServiceCollection AddProjectManagementClients(this IServiceCollection services)
         {
             services.AddScoped<ProjectTaskClient>();
             services.AddScoped<ProjectClient>();
+            services.AddScoped<AuthClient>();
 
             return services;
         }

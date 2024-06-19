@@ -1,0 +1,53 @@
+﻿@page "/Login"
+@using ProjectManagement.Classes
+@inherits ProjectManagementComponentBase
+@inject ILoginManager _loginManager
+@inject NavigationManager _navManager
+<div>
+    <div>
+        <label>
+            Email:
+        </label>
+        <InputText @bind-Value=@(_loginModel.Username)/>
+    </div>
+    <div>
+        <label>
+            Password:
+        </label>
+        <InputText @bind-Value=@(_loginModel.Password) />
+    </div>
+    <button type="button" @onclick=@(HandleLoginClick)>Log In</button>
+    <button type="button" @onclick=@(NavigateToRegister)>Register</button>
+</div>
+
+@code{
+    private class UserLoginModel {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+    private UserLoginModel _loginModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _loginModel = new();
+        await base.OnInitializedAsync();
+    }
+    private async Task HandleLoginClick(MouseEventArgs args)
+    {
+        ShowInfo("Logging in...");
+        bool isLoginSuccess = await _loginManager.Login(_loginModel.Username, _loginModel.Password);
+        if (isLoginSuccess)
+        {
+            ShowSuccess("Logged in!");
+            _navManager.NavigateTo("/Projects");
+        }
+        else
+        {
+            ShowWarning("Invalid username or password.");
+        }
+    }
+    private void NavigateToRegister(MouseEventArgs args)
+    {
+        _navManager.NavigateTo("/Register");
+    }
+}

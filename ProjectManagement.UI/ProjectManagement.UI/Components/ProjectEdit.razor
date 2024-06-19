@@ -50,7 +50,7 @@ else
 
     private bool _isTaskEditOpen = false;
     private bool _isLoading = false;
-    private ProjectTaskViewModel _focusedTask = null;
+    private ProjectTaskViewModel? _focusedTask = null;
 
     private Dictionary<string, List<ProjectTaskViewModel>> _tasksByStatus = null!;
 
@@ -68,7 +68,7 @@ else
     }
     protected internal async Task TaskChangedCallback(ProjectTaskViewModel viewModel)
     {
-        string newStatus = viewModel.Status.GetDisplayNameString();
+        string newStatus = viewModel.Status?.GetDisplayNameString() ?? "";
         if (viewModel.ProjectId <= 0)
         {
             viewModel.ProjectId = Project.Id;
@@ -101,7 +101,7 @@ else
         _isTaskEditOpen = false;
         await InvokeAsync(StateHasChanged);
     }
-    internal async Task UpdateInternalDictionary()
+    internal void UpdateInternalDictionary()
     {
         _tasksByStatus = new();
 
@@ -119,19 +119,19 @@ else
         var response = await _client.Save(Project);
         if (response.IsSuccess)
         {
-            Project = response.Result;
+            Project = response.Result ?? throw new Exception("Project was null after save. Please contact a dev.");
         }
         else
         {
             throw new Exception($"Error retrieving Project after save. Contact a dev. {response.ErrorMessage}");
         }
         await SaveCallback.Invoke(Project);
-        await UpdateInternalDictionary();
+        UpdateInternalDictionary();
 
         _isLoading = false;
         await InvokeAsync(StateHasChanged);
     }
-    internal async Task OpenProjectTask(ProjectTaskViewModel viewModel)
+    internal void OpenProjectTask(ProjectTaskViewModel viewModel)
     {
         _focusedTask = viewModel;
         viewModel.PreviousState = new ProjectTaskViewModel();

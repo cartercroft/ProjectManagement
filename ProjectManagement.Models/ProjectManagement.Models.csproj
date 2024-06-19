@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.5" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataLayerAbstractions\DataLayerAbstractions.csproj" />
+    <ProjectReference Include="..\DataLayerAbstractions\LayerAbstractions.csproj" />
     <ProjectReference Include="..\ProjectManagement.Classes\ProjectManagement.Classes.csproj" />
   </ItemGroup>
 

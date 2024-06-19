@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DataLayerAbstractions;
 using Microsoft.EntityFrameworkCore;
+using ProjectManagement.EF;
 using ProjectManagement.Models;
 
 namespace ProjectManagement.Repositories

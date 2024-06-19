@@ -1,9 +1,13 @@
-﻿using ProjectManagement.Public.Models;
+﻿using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using ProjectManagement.Public.Models;
 
 namespace ProjectManagement.Clients
 {
-    public class ProjectClient : ProjectManagementClientBase<ProjectViewModel>
+    public class ProjectClient : CRUDClientBase<ProjectViewModel>
     {
-        public ProjectClient(IHttpClientFactory httpClientFactory) : base(httpClientFactory){}
+        public ProjectClient(
+            IHttpClientFactory httpClientFactory,
+            ProtectedSessionStorage sessionStorage
+            ) : base(httpClientFactory, sessionStorage){}
     }
 }

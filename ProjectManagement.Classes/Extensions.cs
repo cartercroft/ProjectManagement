@@ -24,14 +24,14 @@ namespace ProjectManagement.Classes
         }
         public static string GetDisplayNameString(this Enum enumMember)
         {
-            DisplayAttribute attribute = GetAttribute<DisplayAttribute>(enumMember);
+            DisplayAttribute? attribute = GetAttribute<DisplayAttribute>(enumMember);
             if (attribute != null)
             {
-                return attribute.Name;
+                return attribute.Name ?? "";
             }
             return enumMember.ToString();
         }
-        public static TAttribute GetAttribute<TAttribute>(this Enum enumValue)
+        public static TAttribute? GetAttribute<TAttribute>(this Enum enumValue)
             where TAttribute : Attribute
         {
             return enumValue.GetType()
