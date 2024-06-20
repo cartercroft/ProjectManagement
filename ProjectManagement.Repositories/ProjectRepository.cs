@@ -17,5 +17,13 @@ namespace ProjectManagement.Repositories
         {
             p => p.Tasks
         }; 
+
+        public List<Project> GetAllProjectsForUser(Guid userId)
+        {
+            return GetAllNoInclusions()
+                .ApplyInclusion(IncludeOnGetAll)
+                .Where(p => p.UserId == userId)
+                .ToList();
+        }
     }
 }

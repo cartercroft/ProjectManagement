@@ -19,5 +19,9 @@ namespace ProjectManagement.Services
             _taskService = taskService;
             _projectRepository = projectRepository;
         }
+        public async Task<List<ProjectViewModel>> GetAllProjectsForUser(Guid userId)
+        {
+            return _mapper.Map<List<ProjectViewModel>>(await Task.Run(() => _projectRepository.GetAllProjectsForUser(userId)));
+        }
     }
 }

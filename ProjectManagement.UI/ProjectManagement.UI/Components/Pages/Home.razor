@@ -43,7 +43,7 @@ else
     private async Task GetProjects()
     {
         _isLoading = true;
-        var result = await _projectClient.GetAll();
+        var result = await _projectClient.GetAllProjectsForUser();
         if (result.IsSuccess)
         {
             Projects = result.Result ?? new List<ProjectViewModel>();

@@ -1,6 +1,5 @@
 ﻿using DataLayerAbstractions;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjectManagement.Models
 {
@@ -8,6 +7,8 @@ namespace ProjectManagement.Models
     {
         [Required]
         public string Name { get; set; } = null!;
+        [Required]
+        public Guid UserId { get; set; }
         public virtual List<ProjectTask> Tasks { get; set; } = new List<ProjectTask>();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using DataLayerAbstractions;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace DataLayerAbstractions
 {
@@ -17,33 +17,47 @@ namespace DataLayerAbstractions
         where TService : ServiceBase<TViewModel, TRepository, TDataModel>
     {
         private readonly TService _service;
+        private readonly Guid _userId;
         public APIControllerBase(TService service)
         {
             _service = service;
         }
         [HttpGet]
         [Authorize]
-        public TViewModel Get(int id)
+        public virtual TViewModel Get(int id)
         {
             return _service.Get(id);
         }
         [HttpGet]
         [Authorize]
-        public IEnumerable<TViewModel> GetAll()
+        public virtual IEnumerable<TViewModel> GetAll()
         {
             return _service.GetAll();
         }
         [HttpPost]
         [Authorize]
-        public TViewModel Save(TViewModel viewModel)
+        public virtual TViewModel Save(TViewModel viewModel)
         {
             return _service.Save(viewModel);
         }
         [HttpPost]
         [Authorize]
-        public void Delete(TViewModel viewModel)
+        public virtual void Delete(TViewModel viewModel)
         {
             _service.Delete(viewModel);
+        }
+        protected Guid GetCurrentUserId()
+        {
+            var user = HttpContext.User;
+            var userIdClaim = user?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            Guid userId;
+            if (user == null
+                || userIdClaim == null
+                || !Guid.TryParse(userIdClaim.Value, out userId))
+            {
+                return Guid.Empty;
+            }
+            return userId;
         }
     }
 }

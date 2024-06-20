@@ -1,4 +1,5 @@
 ﻿using DataLayerAbstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Models;
 using ProjectManagement.Public.Models;
@@ -13,6 +14,12 @@ namespace ProjectManagement.API.Controllers
         public ProjectController(ProjectService projectService) : base(projectService)
         {
             _projectService = projectService;
+        }
+        [HttpGet]
+        [Authorize]
+        public async Task<List<ProjectViewModel>> GetAllProjectsForUser()
+        {
+            return await _projectService.GetAllProjectsForUser(GetCurrentUserId());
         }
     }
 }
