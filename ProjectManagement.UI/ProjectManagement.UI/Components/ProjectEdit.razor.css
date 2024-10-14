@@ -1,0 +1,47 @@
+.project-edit-container {
+  padding: 0.5em;
+}
+.project-edit-container .tasks {
+  display: flex;
+  justify-content: space-between;
+}
+.project-edit-container .tasks .task-section-container {
+  position: relative;
+  border: solid 1px;
+  border-radius: 0.33em;
+  border-color: rgba(128, 128, 128, 0.6);
+  flex-grow: 1;
+  padding: 0.2em 1em;
+  margin-right: 0.5em;
+  justify-content: space-between;
+}
+.project-edit-container .tasks .task-section-container .task-section-header {
+  text-align: center;
+  font-weight: bold;
+  color: rgba(155, 155, 155, 0.8);
+}
+.project-edit-container .tasks .task-section-container .task-section {
+  height: 750px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+.project-edit-container .tasks .task-section-container .task-section .task-list {
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+}
+.project-edit-container .tasks .task-section-container .task-section .task-list .task-detail {
+  color: rgba(33, 33, 33, 0.7);
+  background-color: rgba(123, 100, 0, 0.2);
+  border-radius: 0.33em;
+  min-height: 3em;
+  margin-bottom: 0.25em;
+}
+.project-edit-container .tasks .task-section-container .task-section .task-list .task-detail:hover {
+  color: rgba(33, 33, 33, 0.7);
+}
+.project-edit-container .tasks .task-section-container .task-section:not(:last-child) {
+  margin-right: 0.4em;
+}
+
+/*# sourceMappingURL=ProjectEdit.razor.css.map */

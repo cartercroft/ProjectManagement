@@ -55,10 +55,17 @@ namespace ProjectManagement.UI
 
         public async Task Logout()
         {
-            await _authClient.Logout();
-            _authService.CurrentUser = new System.Security.Claims.ClaimsPrincipal();
-            AuthenticationState = new AuthenticationState(_authService.CurrentUser);
-            NotifyAuthenticationStateChanged(Task.FromResult(AuthenticationState));
+            Response response = await _authClient.Logout();
+            if (response.IsSuccess)
+            {
+                _authService.CurrentUser = new System.Security.Claims.ClaimsPrincipal();
+                AuthenticationState = new AuthenticationState(_authService.CurrentUser);
+                NotifyAuthenticationStateChanged(Task.FromResult(AuthenticationState));
+            }
+            else 
+            {
+                //TODO: Logging
+            }
         }
     }
 }
