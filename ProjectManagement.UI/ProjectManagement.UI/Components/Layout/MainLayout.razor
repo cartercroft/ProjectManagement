@@ -1,7 +1,15 @@
 ﻿@using ProjectManagement.UI.Components.Auth
 @inherits LayoutComponentBase
 
-@Body
+<AuthorizeView>
+    <Authorized>
+        <UserMenu />
+        @Body
+    </Authorized>
+    <NotAuthorized>
+        <Login />
+    </NotAuthorized>
+</AuthorizeView>
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.

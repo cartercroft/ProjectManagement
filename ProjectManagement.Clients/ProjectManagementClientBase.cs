@@ -55,6 +55,10 @@ namespace ProjectManagement.Clients
                 {
                     headers.Add("Authorization", $"Bearer {sessionEntry.Value}");
                 }
+                else
+                {
+                    throw new KeyNotFoundException($"No AuthToken found in session when trying to make an authenticated request.");
+                }
             }
             return headers;
         }

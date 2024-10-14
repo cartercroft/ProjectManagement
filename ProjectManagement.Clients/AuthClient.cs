@@ -1,6 +1,9 @@
 ﻿
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.AspNetCore.Http;
 using ProjectManagement.Classes;
 using ProjectManagement.Public.Models;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 
 namespace ProjectManagement.Clients
@@ -8,9 +11,14 @@ namespace ProjectManagement.Clients
     public class AuthClient : ClientBase
     {
         private readonly AuthService _authService;
-        public AuthClient(IHttpClientFactory httpClientFactory, AuthService authService) : base(httpClientFactory.CreateClient("ProjectManagementClient"))
+        private ProtectedSessionStorage _session;
+
+        public AuthClient(IHttpClientFactory httpClientFactory,
+            AuthService authService,
+            ProtectedSessionStorage session) : base(httpClientFactory.CreateClient("ProjectManagementClient"))
         {
             _authService = authService;
+            _session = session;
         }
         public async Task<SignInResultModel> SignIn(string email, string password)
         {
@@ -21,6 +29,8 @@ namespace ProjectManagement.Clients
 
             TokenProvider? tokenProvider = response.Result;
             result.Tokens = tokenProvider;
+
+            await _session.SetAsync("AuthToken", result?.Tokens?.AccessToken);
 
             var profileHeaders = new Dictionary<string, string>();
             profileHeaders.Add("Authorization", $"Bearer {tokenProvider?.AccessToken}");
@@ -42,6 +52,10 @@ namespace ProjectManagement.Clients
         public async Task<Response> Register(RegisterRequestModel model)
         {
             return await PostAsync("Register", model);
+        }
+        public async Task<Response> Logout()
+        {
+            return await PostAsync("Logout", new { returnUrl = "/" });
         }
     }
 }

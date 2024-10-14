@@ -32,13 +32,17 @@
     .close {
         height: 40px;
         width: 40px;
+        text-align: center;
         background-color: transparent;
         transition: 0.25s ease;
         border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         cursor: pointer;
+        border: 3px solid rgba(144, 144, 144, .5);
+    }
+
+    .close::after {
+        display: inline-block;
+        content: "\00d7"; /* This will render the 'X' */
     }
 
     .close:hover {

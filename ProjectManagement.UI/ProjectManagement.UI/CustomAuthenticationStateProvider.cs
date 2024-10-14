@@ -11,14 +11,12 @@ namespace ProjectManagement.UI
     {
         private AuthenticationState _authenticationState;
         private AuthClient _authClient;
-        private ProtectedSessionStorage _session;
         private AuthService _authService;
-        public CustomAuthenticationStateProvider(AuthService authService, AuthClient authClient, ProtectedSessionStorage sessionStorage)
+        public CustomAuthenticationStateProvider(AuthService authService, AuthClient authClient)
         {
             _authClient = authClient;
             _authenticationState = new AuthenticationState(authService.CurrentUser);
             _authService = authService;
-            _session = sessionStorage;
 
             authService.UserChanged += (newUser) =>
             {
@@ -46,7 +44,6 @@ namespace ProjectManagement.UI
                 _authService.CurrentUser = response.ClaimsPrincipal;
                 AuthenticationState = new AuthenticationState(_authService.CurrentUser);
                 
-                await _session.SetAsync("AuthToken", response.Tokens.AccessToken);
                 return true;
             }
             return false;
@@ -54,6 +51,11 @@ namespace ProjectManagement.UI
         public async Task<Response> Register(RegisterRequestModel model)
         {
             return await _authClient.Register(model);
+        }
+
+        public async Task<Response> Logout()
+        {
+            return await _authClient.Logout();
         }
     }
 }

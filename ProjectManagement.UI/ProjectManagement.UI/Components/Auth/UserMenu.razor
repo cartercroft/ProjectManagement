@@ -1,0 +1,16 @@
+﻿@inject ILoginManager _loginManager
+
+    <AuthorizeView>
+        <NotAuthorized>
+
+        </NotAuthorized>
+        <Authorized>
+            <button @onclick="HandleLogoutClick">Log Out</button>
+        </Authorized>
+    </AuthorizeView>
+
+@code{
+    protected async Task HandleLogoutClick() {
+        await _loginManager.Logout();
+    }   
+}
