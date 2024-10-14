@@ -3,6 +3,7 @@ using ProjectManagement.API;
 using ProjectManagement.Models;
 using ProjectManagement.EF;
 using Microsoft.OpenApi.Models;
+using static ProjectManagement.API.RouteGroupBuilderExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapGroup("/api")
+    .ApplyCustomEndpointConfiguration()
     .MapIdentityApi<User>();
 
 app.UseHttpsRedirection();

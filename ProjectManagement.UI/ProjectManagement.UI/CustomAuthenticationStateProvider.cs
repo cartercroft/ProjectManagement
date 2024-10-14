@@ -53,9 +53,12 @@ namespace ProjectManagement.UI
             return await _authClient.Register(model);
         }
 
-        public async Task<Response> Logout()
+        public async Task Logout()
         {
-            return await _authClient.Logout();
+            await _authClient.Logout();
+            _authService.CurrentUser = new System.Security.Claims.ClaimsPrincipal();
+            AuthenticationState = new AuthenticationState(_authService.CurrentUser);
+            NotifyAuthenticationStateChanged(Task.FromResult(AuthenticationState));
         }
     }
 }

@@ -14,6 +14,6 @@ namespace ProjectManagement.UI.Components.Auth
         /// <returns>A flag of whether of not the login was successful.</returns>
         public Task<bool> Login(string username, string password);
         public Task<Response> Register(RegisterRequestModel model);
-        public Task<Response> Logout();
+        public Task Logout();
     }
 }

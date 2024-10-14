@@ -1,4 +1,5 @@
 ﻿@inject ILoginManager _loginManager
+@inject NavigationManager _navManager
 
     <AuthorizeView>
         <NotAuthorized>
@@ -12,5 +13,6 @@
 @code{
     protected async Task HandleLogoutClick() {
         await _loginManager.Logout();
+        _navManager.NavigateTo("/");
     }   
 }
