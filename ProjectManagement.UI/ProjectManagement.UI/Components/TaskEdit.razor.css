@@ -1,0 +1,40 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  /*#region textarea scrollbar*/
+  /*textarea::-webkit-scrollbar {
+      width: 10px;
+  }
+
+  textarea::-webkit-scrollbar-thumb {
+      background-color: gray;
+      border-radius: 5px;
+      padding-right: 15px;
+  }*/
+  /*#endregion textarea scrollbar*/
+}
+.container div {
+  margin-bottom: 0.25em;
+}
+.container textarea {
+  resize: none;
+  overflow-y: scroll;
+  height: 225px;
+  width: 100%;
+  padding-right: 0;
+  scrollbar-width: none;
+}
+.container .task-title {
+  width: 100%;
+}
+.container input, .container textarea {
+  min-width: 180px;
+}
+.container .header {
+  margin: 0 auto;
+  height: 1.5rem;
+  font-size: 1.75em;
+}
+
+/*# sourceMappingURL=TaskEdit.razor.css.map */
