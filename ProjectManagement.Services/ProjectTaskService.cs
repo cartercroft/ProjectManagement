@@ -15,10 +15,5 @@ namespace ProjectManagement.Services
             _taskRepository = taskRepository;
             _mapper = mapper;
         }
-        //public List<ProjectTaskViewModel> GetProjectTasksForProject(int projectId)
-        //{
-        //    return _mapper.Map<List<ProjectTaskViewModel>>(
-        //        _taskRepository.GetProjectTasksForProject(projectId));
-        //}
     }
 }

@@ -2,9 +2,9 @@
 
 namespace DataLayerAbstractions
 {
-    public class ServiceBase<TViewModel, TRepository, TDataModel> : AbstractServiceBase<TViewModel> 
+    public class ServiceBase<TViewModel, TRepository, TDataModel> : IServiceBase<TViewModel> 
         where TViewModel : ViewModelBase
-        where TDataModel : ModelBase
+        where TDataModel : ModelBaseWithId
         where TRepository : RepositoryBase<TDataModel>
     {
         private readonly RepositoryBase<TDataModel> _repository;
@@ -15,15 +15,15 @@ namespace DataLayerAbstractions
             _repository = repository;
             _mapper = mapper;
         }
-        protected override void PreSave(TViewModel viewModel)
+        protected virtual void PreSave(TViewModel viewModel)
         {
             //RemoveChildCollections(ref viewModel);
         }
-        protected override void PostSave(TViewModel viewModel) 
+        protected virtual void PostSave(TViewModel viewModel) 
         {
             //Dictionary<string, List<ViewModelBase>> childCollections = GetCollectionChildProperties(viewModel);
         }
-        public override sealed TViewModel InternalSave(TViewModel viewModel)
+        private TViewModel InternalSave(TViewModel viewModel)
         {
             PreSave(viewModel);
             var model = _mapper.Map<TDataModel>(viewModel);
@@ -33,17 +33,17 @@ namespace DataLayerAbstractions
 
             return newViewModel;
         }
-        public override void Delete(TViewModel viewModel)
+        public void Delete(TViewModel viewModel)
         {
             var model = MapClientModelToDataModel(viewModel);
             _repository.Delete(model);
         }
-        public override TViewModel Get(int id)
+        public TViewModel Get(int id)
         {
             var dataModel = _repository.Get(id);
             return _mapper.Map<TViewModel>(dataModel);
         }
-        public override IEnumerable<TViewModel> GetAll()
+        public IEnumerable<TViewModel> GetAll()
         {
             return _mapper.Map<IEnumerable<TViewModel>>(_repository.GetAll());
         }

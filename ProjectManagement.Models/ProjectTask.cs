@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjectManagement.Models
 {
-    public class ProjectTask : ModelBase
+    public class ProjectTask : ModelBaseWithId
     {
         public string Title { get; set; } = null!;
         public Enumeration.ProjectTaskStatus Status { get; set; } = Enumeration.ProjectTaskStatus.NotSet;

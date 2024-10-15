@@ -4,6 +4,7 @@ using ProjectManagement.Models;
 using ProjectManagement.EF;
 using Microsoft.OpenApi.Models;
 using static ProjectManagement.API.RouteGroupBuilderExtensions;
+using ProjectManagement.API.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,11 @@ builder.Services.AddDbContext<ProjectManagementContext>(opt =>
 );
 
 builder.Services.AddAuthentication();
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy(PolicyNames.SuperUserOnly,
+        policy => policy.RequireRole(RoleNames.Admin, RoleNames.Owner));
+});
 builder.Services.AddIdentityApiEndpoints<User>()
     .AddEntityFrameworkStores<ProjectManagementContext>();
 

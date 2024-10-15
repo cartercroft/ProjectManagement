@@ -12,7 +12,7 @@ namespace DataLayerAbstractions
         TService,
         TRepository> : ControllerBase
         where TViewModel : ViewModelBase
-        where TDataModel : ModelBase
+        where TDataModel : ModelBaseWithId
         where TRepository : RepositoryBase<TDataModel>
         where TService : ServiceBase<TViewModel, TRepository, TDataModel>
     {

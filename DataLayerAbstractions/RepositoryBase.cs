@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace DataLayerAbstractions
 {
-    public class RepositoryBase<TModel> : IRepository<TModel> where TModel : ModelBase
+    public class RepositoryBase<TModel> : IRepository<TModel, int> where TModel : ModelBaseWithId
     {
         private DbContext _dbContext;
         private readonly DbSet<TModel> _dbSet;

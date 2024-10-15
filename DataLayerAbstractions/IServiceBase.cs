@@ -1,6 +1,6 @@
 ﻿namespace DataLayerAbstractions
 {
-    public abstract class AbstractServiceBase<TViewModel>
+    public interface IServiceBase<TViewModel>
     {
         public abstract TViewModel Get(int id);
         public abstract IEnumerable<TViewModel> GetAll();
@@ -8,9 +8,10 @@
         /// Handles deciding whether to Add or Update a model in the DB.
         /// </summary>
         /// <param name="viewModel"></param>
-        public abstract TViewModel InternalSave(TViewModel viewModel);
-        public abstract void Delete(TViewModel viewModel);
-        protected abstract void PreSave(TViewModel viewModel);
-        protected abstract void PostSave(TViewModel viewModel);
+        TViewModel InternalSave(TViewModel viewModel);
+        public void Delete(TViewModel viewModel);
+        public TViewModel Save(TViewModel viewModel);
+        protected void PreSave(TViewModel viewModel);
+        protected void PostSave(TViewModel viewModel);
     }
 }

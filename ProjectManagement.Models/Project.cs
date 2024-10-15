@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjectManagement.Models
 {
-    public class Project : ModelBase
+    public class Project : ModelBaseWithId
     {
         [Required]
         public string Name { get; set; } = null!;
