@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace ProjectManagement.Repositories
 {
-    public class ProjectRepository : RepositoryBase<Project>
+    public class ProjectRepository : RepositoryBase<int, Project>
     {
         private ProjectManagementContext _context;
         public ProjectRepository(ProjectManagementContext context, IMapper mapper) : base(context, mapper)

@@ -6,7 +6,7 @@ using ProjectManagement.Repositories;
 
 namespace ProjectManagement.Services
 {
-    public class ProjectTaskService : ServiceBase<ProjectTaskViewModel, ProjectTaskRepository, ProjectTask>
+    public class ProjectTaskService : ServiceBase<int, ProjectTaskViewModel, ProjectTask, ProjectTaskRepository>
     {
         private readonly ProjectTaskRepository _taskRepository;
         private readonly IMapper _mapper;

@@ -1,20 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DataLayerAbstractions;
 using Microsoft.AspNetCore.Authorization;
+using LayerAbstractions.Interfaces;
+using LayerAbstractions;
 
 namespace DataLayerAbstractions
 {
     [Route("/api/[controller]/[action]")]
     [ApiController]
 
-    public class APIControllerBase<TViewModel,
+    public class APIControllerBase<TKey,
+        TViewModel,
         TDataModel,
         TService,
         TRepository> : ControllerBase
-        where TViewModel : ViewModelBase
-        where TDataModel : ModelBaseWithId
-        where TRepository : RepositoryBase<TDataModel>
-        where TService : ServiceBase<TViewModel, TRepository, TDataModel>
+        where TViewModel : IViewModel<TKey>
+        where TDataModel : ModelBase<TKey>
+        where TRepository : RepositoryBase<TKey, TDataModel>
+        where TService : ServiceBase<TKey, TViewModel, TDataModel, TRepository>
     {
         private readonly TService _service;
         public APIControllerBase(TService service)
@@ -23,7 +26,7 @@ namespace DataLayerAbstractions
         }
         [HttpGet]
         [Authorize]
-        public TViewModel Get(int id)
+        public TViewModel Get(TKey id)
         {
             return _service.Get(id);
         }

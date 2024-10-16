@@ -1,10 +1,10 @@
 ﻿using LayerAbstractions.Interfaces;
-using Microsoft.AspNetCore.Identity;
 
-namespace ProjectManagement.Models
+namespace LayerAbstractions
 {
-    public class Role : IdentityRole<Guid>, IModel<Guid>
+    public class ModelBase<TKey> : IModel<TKey>
     {
+        public TKey Id { get; set; }
         public DateTime CreatedWhen { get; set; }
         public DateTime UpdatedWhen { get; set; }
         public bool IsDeleted { get; set; }

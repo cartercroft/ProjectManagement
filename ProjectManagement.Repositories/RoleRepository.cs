@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using DataLayerAbstractions;
+using LayerAbstractions.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagement.EF;
 using ProjectManagement.Models;
 
 namespace ProjectManagement.Repositories
 {
-    public class RoleRepository : IRepository<Role, Guid>
+    public class RoleRepository : IRepository<Guid, Role>
     {
         private readonly IMapper _mapper;
         private readonly ProjectManagementContext _context;
@@ -32,6 +32,11 @@ namespace ProjectManagement.Repositories
                 throw new KeyNotFoundException($"No {typeof(Role).Name} found with ID {id}.");
             }
             return role;
+        }
+
+        public Role Get(Role id)
+        {
+            throw new NotImplementedException();
         }
 
         public List<Role> GetAll()

@@ -1,4 +1,4 @@
-﻿namespace DataLayerAbstractions
+﻿namespace LayerAbstractions.Interfaces
 {
     public interface IRepository
     {
@@ -7,7 +7,7 @@
         public object Get(int id);
         public List<object> GetAll();
     }
-    public interface IRepository<TModel, TKey>
+    public interface IRepository<TKey, TModel>
     {
         public TModel Save(TModel model);
         public void Delete(TModel model);
