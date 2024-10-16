@@ -1,4 +1,4 @@
-﻿namespace ProjectManagement.API.Auth
+﻿namespace ProjectManagement.Classes
 {
     public static class RoleNames
     {

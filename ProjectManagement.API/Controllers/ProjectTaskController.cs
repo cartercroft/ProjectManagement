@@ -1,4 +1,5 @@
 ﻿using DataLayerAbstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Models;
 using ProjectManagement.Public.Models;
@@ -14,6 +15,5 @@ namespace ProjectManagement.API.Controllers
         {
             _taskService = taskService;
         }
-        
     }
 }

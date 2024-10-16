@@ -26,25 +26,25 @@ namespace DataLayerAbstractions
         }
         [HttpGet]
         [Authorize]
-        public TViewModel Get(TKey id)
+        public virtual TViewModel Get(TKey id)
         {
             return _service.Get(id);
         }
         [HttpGet]
         [Authorize]
-        public IEnumerable<TViewModel> GetAll()
+        public virtual IEnumerable<TViewModel> GetAll()
         {
             return _service.GetAll();
         }
         [HttpPost]
         [Authorize]
-        public TViewModel Save(TViewModel viewModel)
+        public virtual TViewModel Save(TViewModel viewModel)
         {
             return _service.Save(viewModel);
         }
         [HttpPost]
         [Authorize]
-        public void Delete(TViewModel viewModel)
+        public virtual void Delete(TViewModel viewModel)
         {
             _service.Delete(viewModel);
         }

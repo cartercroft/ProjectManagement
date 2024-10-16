@@ -34,7 +34,7 @@ namespace DataLayerAbstractions
 
             model.UpdatedWhen = DateTime.Now;
 
-            if (!ReferenceEquals(default(TKey), key) && key is not null)
+            if (key is not null && !key.Equals(default(TKey)))
             {
                 Update(model);
             }
