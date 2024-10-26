@@ -4,7 +4,7 @@
 @inject ILoginManager _loginManager
 @inject NavigationManager _navManager
 <div class="login-wrapper">
-    <div class="login-form">
+    <form class="login-form" @onsubmit=@(HandleLogin)>
         <div>
             <label>
                 Email:
@@ -17,9 +17,9 @@
             </label>
             <InputText @bind-Value=@(_loginModel.Password) AdditionalAttributes=@(new Dictionary<string, object>(){["type"] = "password"}) />
         </div>
-        <button type="button" @onclick=@(HandleLoginClick)>Log In</button>
+        <button type="submit">Log In</button>
         <button type="button" @onclick=@(NavigateToRegister)>Register</button>
-    </div>
+    </form>
 </div>
 
 @code{
@@ -34,7 +34,7 @@
         _loginModel = new();
         await base.OnInitializedAsync();
     }
-    private async Task HandleLoginClick(MouseEventArgs args)
+    private async Task HandleLogin(EventArgs args)
     {
         ShowInfo("Logging in...");
         bool isLoginSuccess = await _loginManager.Login(_loginModel.Username, _loginModel.Password);
@@ -47,6 +47,10 @@
         {
             ShowWarning("Invalid username or password.");
         }
+    }
+    private async Task HandleLoginClick(MouseEventArgs args)
+    {
+        await HandleLogin(args);
     }
     private void NavigateToRegister(MouseEventArgs args)
     {
