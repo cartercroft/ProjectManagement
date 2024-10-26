@@ -10,6 +10,7 @@ namespace ProjectManagement.UI
             services.AddScoped<ProjectTaskClient>();
             services.AddScoped<ProjectClient>();
             services.AddScoped<AuthClient>();
+            services.AddScoped<RoleClient>();
 
             return services;
         }

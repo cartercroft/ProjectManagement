@@ -1,0 +1,31 @@
+﻿@page "/Roles"
+@inject RoleClient _roleClient
+@inherits AuthorizedComponentBase
+@using ProjectManagement.Classes
+@using Microsoft.AspNetCore.Authorization
+
+<Grid Items="RoleList">
+    <Columns>
+        <GridColumn HeaderText="Name" Field="@nameof(RoleViewModel.Name)"></GridColumn>
+        <GridColumn HeaderText="Created" Field="@nameof(RoleViewModel.CreatedWhen)"></GridColumn>
+        <GridColumn HeaderText="Updated" Field="@nameof(RoleViewModel.UpdatedWhen)"></GridColumn>
+    </Columns>
+</Grid>
+
+@code{
+    protected List<RoleViewModel> RoleList { get; set; } = new();
+
+    protected override async Task OnInitializedAsync() 
+    {
+        await base.OnInitializedAsync();
+        var response = await _roleClient.GetAll();
+        if (response.IsSuccess)
+        {
+            RoleList = response.Result ?? new();
+        }
+        else
+        {
+            HandleError("Error retrieving Roles.");
+        }
+    }
+}

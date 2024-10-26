@@ -6,7 +6,7 @@ using ProjectManagement.Models;
 
 namespace ProjectManagement.Repositories
 {
-    public class ProjectTaskRepository : RepositoryBase<ProjectTask>
+    public class ProjectTaskRepository : RepositoryBase<int, ProjectTask>
     {
         private readonly ProjectManagementContext _context;
         public ProjectTaskRepository(ProjectManagementContext context, IMapper mapper) : base(context, mapper)

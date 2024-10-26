@@ -28,6 +28,7 @@ namespace ProjectManagement.API
             //    .ForEach(x => services.AddScoped(x));
             services.AddScoped<ProjectTaskRepository>();
             services.AddScoped<ProjectRepository>();
+            services.AddScoped<RoleRepository>();
 
             return services;
         }
@@ -35,6 +36,7 @@ namespace ProjectManagement.API
         {
             services.AddScoped<ProjectTaskService>();
             services.AddScoped<ProjectService>();
+            services.AddScoped<RoleService>();
 
             return services;
         }

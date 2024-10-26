@@ -4,6 +4,7 @@ using ProjectManagement.Models;
 using ProjectManagement.EF;
 using Microsoft.OpenApi.Models;
 using static ProjectManagement.API.RouteGroupBuilderExtensions;
+using ProjectManagement.Classes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,14 +15,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ProjectManagementContext>(opt => 
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("ProjectManagement"), b => b.MigrationsAssembly("ProjectManagement.Repositories"))
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("ProjectManagement"), b => b.MigrationsAssembly("ProjectManagement.API"))
     .EnableSensitiveDataLogging()
     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking),
     contextLifetime: ServiceLifetime.Scoped
 );
 
 builder.Services.AddAuthentication();
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddCustomPolicies();
+});
 builder.Services.AddIdentityApiEndpoints<User>()
     .AddEntityFrameworkStores<ProjectManagementContext>();
 

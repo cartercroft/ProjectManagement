@@ -21,7 +21,10 @@ builder.AddConfiguredHttpClients();
 builder.Services.AddProjectManagementClients();
 builder.Services.AddAuthentication()
     .AddBearerToken();
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddCustomPolicies();
+});
 
 var app = builder.Build();
 

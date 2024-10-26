@@ -27,4 +27,8 @@
     <ProjectReference Include="..\ProjectManagement.Services\ProjectManagement.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Auth\" />
+  </ItemGroup>
+
 </Project>

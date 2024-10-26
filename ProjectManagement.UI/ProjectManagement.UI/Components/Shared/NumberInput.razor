@@ -1,0 +1,38 @@
+﻿<input class="numberInput" @key="_forceRender" value=@Value @onchange=HandleValueChange @attributes=InputAttributes />
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> InputAttributes { get; set; } = new Dictionary<string, object>();
+
+    private int _value = 0;
+    //A value that needs to change every time we need to update the value inside of the input box. Otherwise, blazor will see no value has changed (because we stop the value set conditionally within the Value property setter) and not trigger a render. I am using a bool because it takes the least memory, and we are only watching one element so we can just negate it each time we want to re-render.
+    private bool _forceRender = false;
+    [Parameter]
+    public int Max { get; set; } = int.MaxValue;
+    [Parameter]
+    public int Min { get; set; } = int.MinValue;
+    [Parameter]
+    public int Value
+    {
+        get => _value;
+        set
+        {
+            if (value <= Max && value >= Min)
+            {
+                _value = value;
+            }
+        }
+    }
+    [Parameter]
+    public EventCallback<int> ValueChanged { get; set; }
+
+    protected async void HandleValueChange(ChangeEventArgs args)
+    {
+        if (int.TryParse(args?.Value?.ToString(), out int res))
+        {
+            Value = res;
+        }
+        await ValueChanged.InvokeAsync(Value);
+        _forceRender = !_forceRender;
+    }
+}

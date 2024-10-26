@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using LayerAbstractions;
+using LayerAbstractions.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
@@ -6,7 +8,8 @@ using System.Reflection;
 
 namespace DataLayerAbstractions
 {
-    public class RepositoryBase<TModel> : IRepository<TModel> where TModel : ModelBase
+    public class RepositoryBase<TKey, TModel> : IRepository<TKey, TModel> 
+        where TModel : ModelBase<TKey>
     {
         private DbContext _dbContext;
         private readonly DbSet<TModel> _dbSet;
@@ -27,11 +30,11 @@ namespace DataLayerAbstractions
         }
         public virtual TModel Save(TModel model)
         {
-            int key = model.Id;
+            TKey key = model.Id;
 
             model.UpdatedWhen = DateTime.Now;
 
-            if (key > 0)
+            if (key is not null && !key.Equals(default(TKey)))
             {
                 Update(model);
             }
@@ -60,12 +63,12 @@ namespace DataLayerAbstractions
             existingModel = _mapper.Map(model, existingModel);
             _dbSet.Update(existingModel);
         }
-        public virtual TModel Get(int id)
+        public virtual TModel Get(TKey id)
         {
             TModel? model = _dbSet
                 .ApplyInclusion(AlwaysInclude)
                 .ApplyInclusion(IncludeOnGet)
-                .FirstOrDefault(m => m.Id == id);
+                .FirstOrDefault(m => m.Id.Equals(id));
 
             if(model == null)
             {

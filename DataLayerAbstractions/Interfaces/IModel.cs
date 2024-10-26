@@ -1,8 +1,6 @@
-﻿using LayerAbstractions.Interfaces;
-
-namespace LayerAbstractions
+﻿namespace LayerAbstractions.Interfaces
 {
-    public class ModelBase<TKey> : IModel<TKey>
+    public interface IModel<TKey>
     {
         public TKey Id { get; set; }
         public DateTime CreatedWhen { get; set; }

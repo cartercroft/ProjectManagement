@@ -1,0 +1,147 @@
+﻿@typeparam TItem
+@attribute [CascadingTypeParameter(nameof(TItem))]
+@if(Items == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    object passedInClass = new object();
+    if(GridAttributes != null)
+    {
+        GridAttributes.TryGetValue("class", out passedInClass);
+    }
+        
+    <div @attributes="GridAttributes" class=@($"{passedInClass?.ToString()} grid")>
+        <div class="filterContainer">
+
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    @Columns(default(TItem))
+                </tr>
+            </thead>
+            <tbody>
+                @if (!DisplayList.Any())
+                {
+                    <tr>
+                        No items found.
+                    </tr>   
+                }
+                else
+                {
+                    foreach(var item in DisplayList)
+                    {
+                        <CascadingValue Value="item">
+                            <tr>
+                                @Columns(item)
+                            </tr>
+                        </CascadingValue>
+                    }
+                }
+            </tbody>
+        </table>
+        <div class="pageButtons">
+            @if (CurrentPage == 1)
+                {
+                    <button disabled>&laquo;</button>
+                    <button disabled>&lsaquo;</button>
+                }
+                else
+                {
+                    <button @onclick="@MoveToFirstPage" title="Move First">&laquo;</button>
+                    <button @onclick="@MoveBack" title="Move Back">&lsaquo;</button>
+                }
+                <span class="m-auto text-center px-2">Page <InputNumber Value="@CurrentPage" TValue="int" ValueChanged="@HandlePageNumberInput" ValueExpression=@(() => CurrentPage) class="page-input" /> of @_totalPages </span>
+                @if (CurrentPage < _totalPages)
+                {
+                    <button @onclick="@MoveNext" title="Move Next">&rsaquo;</button>
+                    <button @onclick="@MoveToLastPage" title="Move Last">&raquo;</button>
+                }
+                else
+                {
+                    <button disabled>&rsaquo;</button>
+                    <button disabled>&raquo;</button>
+                }
+        </div>
+        <div class="page-sizes">
+            Items Per Page:
+            <select @onchange="HandlePageSizeChange" value="@PageSize">
+                @foreach(int size in PageSizes)
+                {
+                    <option value="@size">@size</option>
+                }
+            </select>
+        </div>
+    </div>
+}
+@code{
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> GridAttributes { get; set; } = new();
+
+    private int _totalPages => Convert.ToInt32(Math.Ceiling(Items.Count / (decimal)PageSize));
+    [Parameter]
+    public RenderFragment<TItem>? Columns { get; set; }
+    [Parameter]
+    public List<TItem> Items { get; set; }
+    [Parameter]
+    public int PageSize { get; set; } = 5 ;
+    [Parameter]
+    public int[] PageSizes { get; set; } = new int[] { 5, 10, 25, 50 };
+    private List<TItem> DisplayList;
+    private int _currentPage = 1;
+    private int CurrentPage
+    {
+        get => _currentPage;
+        set
+        {
+            if (value <= _totalPages)
+            {
+                _currentPage = value;
+            }
+        }
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        UpdateDisplay();
+        //default class to .grid, otherwise append .grid class to passed in class attribute.
+
+        await base.OnParametersSetAsync();
+    }
+    protected async void UpdateDisplay()
+    {
+        DisplayList = Items.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
+        await InvokeAsync(StateHasChanged);
+    }
+    protected void MoveToFirstPage()
+    {
+        CurrentPage = 1;
+    }
+    protected void MoveToLastPage()
+    {
+        CurrentPage = _totalPages;
+    }
+    protected void MoveBack()
+    {
+        CurrentPage--;
+        UpdateDisplay();
+    }
+    protected void MoveNext()
+    {
+        CurrentPage++;
+        UpdateDisplay();
+    }
+    protected void HandlePageSizeChange(ChangeEventArgs args)
+    {
+        PageSize = int.Parse(args.Value.ToString());
+        UpdateDisplay();
+    }
+    protected void HandlePageNumberInput(int newPageNumber) 
+    {
+        if(newPageNumber > 0 && newPageNumber <= _totalPages)
+        {
+            CurrentPage = newPageNumber;
+        }
+    }
+}

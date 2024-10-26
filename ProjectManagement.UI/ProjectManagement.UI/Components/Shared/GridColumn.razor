@@ -1,0 +1,37 @@
+﻿@typeparam TItem
+
+@if (Item == null || Item.Equals(default(TItem)))
+{
+    <th>@HeaderText</th>
+}
+else if (ChildContent == null)
+{
+    var property = typeof(TItem).GetProperty(Field);
+    var value = property.GetValue(Item);
+    if (string.IsNullOrEmpty(Format))
+    {
+        <td>@(value)</td>
+    }
+    else
+    {
+        string formatStr = "{0:" + Format + "}";
+        <td>@(value != null ? string.Format(formatStr, value) : "")</td>
+    }
+}
+else if (ChildContent != null)
+{
+    <td>@ChildContent(Item)</td>
+}
+
+@code {
+    [Parameter]
+    public string? HeaderText { get; set; }
+    [Parameter]
+    public string? Field { get; set; }
+    [CascadingParameter]
+    public TItem Item { get; set; }
+    [Parameter]
+    public RenderFragment<TItem> ChildContent { get; set; }
+    [Parameter]
+    public string Format { get; set; }
+}

@@ -9,11 +9,11 @@ using ProjectManagement.EF;
 
 #nullable disable
 
-namespace ProjectManagement.Repositories.Migrations
+namespace ProjectManagement.API.Migrations
 {
     [DbContext(typeof(ProjectManagementContext))]
-    [Migration("20240617050443_init")]
-    partial class init
+    [Migration("20241016072242_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -202,6 +202,12 @@ namespace ProjectManagement.Repositories.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedWhen")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -209,6 +215,9 @@ namespace ProjectManagement.Repositories.Migrations
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTime>("UpdatedWhen")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
