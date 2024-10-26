@@ -4,7 +4,10 @@ using ProjectManagement.Models;
 using ProjectManagement.EF;
 using Microsoft.OpenApi.Models;
 using static ProjectManagement.API.RouteGroupBuilderExtensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using ProjectManagement.Classes;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,17 +18,34 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ProjectManagementContext>(opt => 
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("ProjectManagement"), b => b.MigrationsAssembly("ProjectManagement.API"))
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("ProjectManagement"), b => b.MigrationsAssembly("ProjectManagement.Repositories"))
     .EnableSensitiveDataLogging()
     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking),
     contextLifetime: ServiceLifetime.Scoped
 );
 
-builder.Services.AddAuthentication();
+builder.Services
+    .AddAuthentication(x =>
+    {
+        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(x =>
+    {
+        x.RequireHttpsMetadata = false;
+        x.SaveToken = true;
+        x.TokenValidationParameters = new TokenValidationParameters
+        {
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Keys.PrivateKey)),
+            ValidateIssuer = true,
+            ValidateAudience = false
+        };
+    });
 builder.Services.AddAuthorization(opt =>
 {
     opt.AddCustomPolicies();
 });
+
 builder.Services.AddIdentityApiEndpoints<User>()
     .AddEntityFrameworkStores<ProjectManagementContext>();
 
@@ -52,6 +72,7 @@ app.MapGroup("/api")
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LayerAbstractions.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagement.EF;
 using ProjectManagement.Models;
@@ -16,6 +17,7 @@ namespace ProjectManagement.Repositories
             _mapper = mapper;
             _context = context;
             _roles = _context.Roles;
+            _userRoles = _context.UserRoles;
         }
 
         public void Delete(Role role)
