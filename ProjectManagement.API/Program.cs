@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using ProjectManagement.Classes;
 using System.Text;
+using ProjectManagement.API.Services;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,38 +18,44 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ProjectManagementContext>(opt => 
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("ProjectManagement"), b => b.MigrationsAssembly("ProjectManagement.Repositories"))
-    .EnableSensitiveDataLogging()
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("ProjectManagement"), b => b.MigrationsAssembly("ProjectManagement.EF"))
+.EnableSensitiveDataLogging()
     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking),
     contextLifetime: ServiceLifetime.Scoped
 );
 
-builder.Services
-    .AddAuthentication(x =>
+builder.Services.AddIdentity<User, Role>()
+                .AddEntityFrameworkStores<ProjectManagementContext>()
+                .AddDefaultTokenProviders();
+
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters()
     {
-        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(x =>
-    {
-        x.RequireHttpsMetadata = false;
-        x.SaveToken = true;
-        x.TokenValidationParameters = new TokenValidationParameters
-        {
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Keys.PrivateKey)),
-            ValidateIssuer = true,
-            ValidateAudience = false
-        };
-    });
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["JWT:Audience"],
+        ValidIssuer = builder.Configuration["JWT:Issuer"],
+        ClockSkew = TimeSpan.Zero,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+    };
+});
+
 builder.Services.AddAuthorization(opt =>
 {
     opt.AddCustomPolicies();
 });
-
-builder.Services.AddIdentityApiEndpoints<User>()
-    .AddEntityFrameworkStores<ProjectManagementContext>();
+builder.Services.AddTransient<IAuthService, ProjectManagement.API.Services.AuthService>();
 
 //Configure DI stuff for mapper, repos, and services.
 builder.Services.ConfigureAndAddMapper();
@@ -55,7 +63,34 @@ builder.Services.AddRepositories();
 builder.Services.AddApplicationServices();
 builder.Services.AddSwaggerGen(config => {
     config.SwaggerDoc("v1", new OpenApiInfo() { Title = "WebAPI", Version = "v1" });
-    config.InferSecuritySchemes();
+    var securityScheme = new OpenApiSecurityScheme
+    {
+        Name = "JWT Authentication",
+        Description = "Enter your JWT token in this field",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
+    };
+
+    config.AddSecurityDefinition("Bearer", securityScheme);
+
+    var securityRequirement = new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    };
+
+    config.AddSecurityRequirement(securityRequirement);
 });
 var app = builder.Build();
 
@@ -67,8 +102,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapGroup("/api")
-    .ApplyCustomEndpointConfiguration()
-    .MapIdentityApi<User>();
+    .ApplyCustomEndpointConfiguration();
+    //.MapIdentityApi<User>();
 
 app.UseHttpsRedirection();
 

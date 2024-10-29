@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Http;
 using ProjectManagement.Classes;
 using ProjectManagement.Public.Models;
+using ProjectManagement.Public.Models.Auth;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
 

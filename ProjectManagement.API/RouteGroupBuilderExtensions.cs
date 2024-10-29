@@ -11,6 +11,7 @@ namespace ProjectManagement.API
             {
                 await signInManager.SignOutAsync().ConfigureAwait(false);
             });
+
             return builder;
         } 
     }

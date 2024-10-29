@@ -1,4 +1,4 @@
-﻿namespace ProjectManagement.Public.Models
+﻿namespace ProjectManagement.Public.Models.Auth
 {
     public class RegisterRequestModel
     {

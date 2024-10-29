@@ -11,6 +11,7 @@ namespace ProjectManagement.API.Controllers
 {
     [ApiController]
     [Route("/api/[controller]/[action]")]
+    [Authorize(Policy = PolicyNames.SuperUserOnly)]
     public class RoleController : ControllerBase, IAPIController<Guid, RoleViewModel, Role, RoleService, RoleRepository>
     {
         private readonly RoleService _roleService;

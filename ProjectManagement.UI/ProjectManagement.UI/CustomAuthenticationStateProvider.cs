@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using ProjectManagement.Classes;
 using ProjectManagement.Clients;
-using ProjectManagement.Public.Models;
+using ProjectManagement.Public.Models.Auth;
 using ProjectManagement.UI.Components.Auth;
 
 namespace ProjectManagement.UI

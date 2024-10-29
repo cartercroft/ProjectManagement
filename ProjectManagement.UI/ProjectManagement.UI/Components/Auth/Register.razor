@@ -1,4 +1,5 @@
 ﻿@page "/Register"
+@using ProjectManagement.Public.Models.Auth
 @using Microsoft.AspNetCore.Authorization
 @using ProjectManagement.Classes
 @inject ILoginManager _loginManager
@@ -21,7 +22,7 @@
 </div>
 
 
-@code {
+@code{
     private RegisterRequestModel _registerRequest = new();
     private async Task Submit(MouseEventArgs args)
     {

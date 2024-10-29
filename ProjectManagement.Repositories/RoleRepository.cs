@@ -12,6 +12,7 @@ namespace ProjectManagement.Repositories
         private readonly IMapper _mapper;
         private readonly ProjectManagementContext _context;
         private readonly DbSet<Role> _roles;
+        private readonly DbSet<IdentityUserRole<Guid>> _userRoles;
         public RoleRepository(ProjectManagementContext context, IMapper mapper)
         {
             _mapper = mapper;
@@ -73,6 +74,10 @@ namespace ProjectManagement.Repositories
 
             existingModel = _mapper.Map(role, existingModel);
             _roles.Update(existingModel);
+        }
+        public List<Role> GetRolesForUser(User user)
+        {
+            return _userRoles.Join<IdentityUserRole<Guid>, Role, Guid, Role>(_roles, u => u.RoleId, r => r.Id, (u, r) => r).ToList();
         }
     }
 }

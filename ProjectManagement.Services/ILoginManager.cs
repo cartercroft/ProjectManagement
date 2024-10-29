@@ -1,4 +1,4 @@
-﻿using ProjectManagement.Public.Models;
+﻿using ProjectManagement.Public.Models.Auth;
 using System.Security.Claims;
 
 namespace ProjectManagement.Classes

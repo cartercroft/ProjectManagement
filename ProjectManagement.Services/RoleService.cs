@@ -12,10 +12,8 @@ namespace ProjectManagement.Services
         private readonly RoleRepository _roleRepository;
         public RoleService(RoleRepository roleRepository, IMapper mapper)
         {
-
             _roleRepository = roleRepository;
             _mapper = mapper;
-
         }
         public void Delete(RoleViewModel viewModel)
         {
@@ -35,6 +33,11 @@ namespace ProjectManagement.Services
         public RoleViewModel Save(RoleViewModel viewModel)
         {
             return _mapper.Map<RoleViewModel>(_roleRepository.Save(_mapper.Map<Role>(viewModel)));
+        }
+
+        public List<Role> GetRolesForUser(User user)
+        {
+            return _roleRepository.GetRolesForUser(user);
         }
     }
 }
