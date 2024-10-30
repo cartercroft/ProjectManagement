@@ -37,9 +37,7 @@ namespace ProjectManagement.UI
         {
             var response = await _authClient.SignIn(email, password);
             if(response != null 
-                && response.Tokens != null
-                && response.ClaimsPrincipal != null
-                && response.Tokens.AccessToken != null)
+                && response.ClaimsPrincipal != null)
             {
                 _authService.CurrentUser = response.ClaimsPrincipal;
                 AuthenticationState = new AuthenticationState(_authService.CurrentUser);

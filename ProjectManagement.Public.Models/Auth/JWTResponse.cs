@@ -2,6 +2,6 @@
 {
     public class JWTResponse
     {
-        public string Token { get; set; }
+        public string AuthToken { get; set; }
     }
 }

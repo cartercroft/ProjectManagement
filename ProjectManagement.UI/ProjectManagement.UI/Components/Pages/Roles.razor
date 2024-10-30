@@ -1,6 +1,7 @@
 ﻿@page "/Roles"
 @inject RoleClient _roleClient
 @inherits AuthorizedComponentBase
+@attribute [Authorize(Roles = RoleNames.Admin)]
 @using ProjectManagement.Classes
 @using Microsoft.AspNetCore.Authorization
 

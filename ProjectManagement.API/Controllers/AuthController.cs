@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.API.Services;
 using ProjectManagement.Classes;
 using ProjectManagement.Public.Models.Auth;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ProjectManagement.API.Controllers
 {
@@ -16,15 +18,15 @@ namespace ProjectManagement.API.Controllers
         }
 
         [HttpPost]
-        public async Task<Response<JWTResponse>> Login(LoginModel loginModel)
+        public async Task<JWTResponse> Login(LoginModel loginModel)
         {
             return await _authService.Login(loginModel);
         }
 
         [HttpPost]
-        public async Task<Response> Register(RegisterRequestModel requestModel)
+        public async Task Register(RegisterRequestModel requestModel)
         {
-            return await _authService.Register(requestModel);
+            await _authService.Register(requestModel);
         }
 
         [HttpPost]
