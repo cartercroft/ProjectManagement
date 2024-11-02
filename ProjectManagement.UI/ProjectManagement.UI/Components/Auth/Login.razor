@@ -1,7 +1,7 @@
 ﻿@page "/Login"
 @using ProjectManagement.Classes
 @inherits ProjectManagementComponentBase
-@inject ILoginManager _loginManager
+@inject AuthenticationStateProvider _authStateProvider
 @inject NavigationManager _navManager
 <div class="login-wrapper">
     <form class="login-form" @onsubmit=@(HandleLogin)>
@@ -37,7 +37,7 @@
     private async Task HandleLogin(EventArgs args)
     {
         ShowInfo("Logging in...");
-        bool isLoginSuccess = await _loginManager.Login(_loginModel.Username, _loginModel.Password);
+        bool isLoginSuccess = await ((ILoginManager)_authStateProvider).Login(_loginModel.Username, _loginModel.Password);
         if (isLoginSuccess)
         {
             ShowSuccess("Logged in!");

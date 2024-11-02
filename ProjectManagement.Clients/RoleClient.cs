@@ -7,7 +7,7 @@ namespace ProjectManagement.Clients
     {
         public RoleClient(
             IHttpClientFactory httpClientFactory,
-            ProtectedSessionStorage sessionStorage
-            ) : base(httpClientFactory, sessionStorage) { }
+            ProtectedLocalStorage localStorage
+            ) : base(httpClientFactory, localStorage) { }
     }
 }

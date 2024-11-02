@@ -112,7 +112,7 @@ namespace ProjectManagement.API.Services
                 Audience = _configuration["JWT:Audience"],
                 Expires = DateTime.UtcNow.AddMinutes(__TOKEN_EXPIRY_MINUTES__),
                 SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256),
-                Subject = new ClaimsIdentity(claims)
+                Subject = new ClaimsIdentity(claims, "jwt")
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

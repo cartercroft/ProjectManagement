@@ -1,30 +1,26 @@
 using ProjectManagement.UI;
 using Microsoft.AspNetCore.Components.Authorization;
 using ProjectManagement.Classes;
-using ProjectManagement.UI.Components.Auth;
-using Azure.Core.Pipeline;
-using System.Net;
 using Blazored.Toast;
+using ProjectManagement.Models;
+using LayerAbstractions.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+.AddInteractiveServerComponents();
 
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<AuthenticationStateProvider,
     CustomAuthenticationStateProvider>();
-builder.Services.AddScoped<ILoginManager, CustomAuthenticationStateProvider>();
 builder.Services.AddBlazoredToast();
 
 builder.AddConfiguredHttpClients();
 builder.Services.AddProjectManagementClients();
-builder.Services.AddAuthentication()
-    .AddBearerToken();
-builder.Services.AddAuthorization(opt =>
-{
-    opt.AddCustomPolicies();
-});
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorizationCore();
+builder.Services.AddCascadingAuthenticationState();
 
 var app = builder.Build();
 
@@ -49,6 +45,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+    .AddInteractiveServerRenderMode()
+    .AllowAnonymous();
 
 app.Run();

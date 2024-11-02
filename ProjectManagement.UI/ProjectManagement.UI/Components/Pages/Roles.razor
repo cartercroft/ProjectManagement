@@ -1,32 +1,44 @@
 ﻿@page "/Roles"
 @inject RoleClient _roleClient
+@inject AuthenticationStateProvider _authStateProvider
 @inherits AuthorizedComponentBase
-@attribute [Authorize(Roles = RoleNames.Admin)]
 @using ProjectManagement.Classes
 @using Microsoft.AspNetCore.Authorization
 
-<Grid Items="RoleList">
-    <Columns>
-        <GridColumn HeaderText="Name" Field="@nameof(RoleViewModel.Name)"></GridColumn>
-        <GridColumn HeaderText="Created" Field="@nameof(RoleViewModel.CreatedWhen)"></GridColumn>
-        <GridColumn HeaderText="Updated" Field="@nameof(RoleViewModel.UpdatedWhen)"></GridColumn>
-    </Columns>
-</Grid>
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <Grid Items="RoleList">
+            <Columns Context="GridContext">
+                <GridColumn HeaderText="Name" Field="@nameof(RoleViewModel.Name)"></GridColumn>
+                <GridColumn HeaderText="Created" Field="@nameof(RoleViewModel.CreatedWhen)"></GridColumn>
+                <GridColumn HeaderText="Updated" Field="@nameof(RoleViewModel.UpdatedWhen)"></GridColumn>
+            </Columns>
+        </Grid>
+    </Authorized>
+    <NotAuthorized>
+        <h1> UNAUTHORIZED </h1>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code{
+    private AuthenticationState? _authState;
     protected List<RoleViewModel> RoleList { get; set; } = new();
 
     protected override async Task OnInitializedAsync() 
     {
         await base.OnInitializedAsync();
-        var response = await _roleClient.GetAll();
-        if (response.IsSuccess)
+        _authState = await _authStateProvider.GetAuthenticationStateAsync();
+        if (_authState.User.IsInRole("Admin"))
         {
-            RoleList = response.Result ?? new();
-        }
-        else
-        {
-            HandleError("Error retrieving Roles.");
+            var response = await _roleClient.GetAll();
+            if (response.IsSuccess)
+            {
+                RoleList = response.Result ?? new();
+            }
+            else
+            {
+                HandleError("Error retrieving Roles.");
+            }
         }
     }
 }

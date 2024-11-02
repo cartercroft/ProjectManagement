@@ -6,22 +6,22 @@ namespace ProjectManagement.Clients
     public class ProjectManagementClientBase : ClientBase
     {
         private string _controllerName = null!;
-        private readonly ProtectedSessionStorage _sessionStorage = null!;
+        private readonly ProtectedLocalStorage _localStorage = null!;
         public ProjectManagementClientBase(
             IHttpClientFactory httpClientFactory,
-            ProtectedSessionStorage sessionStorage
+            ProtectedLocalStorage localStorage
             ) : base(httpClientFactory.CreateClient("ProjectManagementClient"))
         {
-            _sessionStorage = sessionStorage;
+            _localStorage = localStorage;
         }
         public ProjectManagementClientBase(
             IHttpClientFactory httpClientFactory,
-            ProtectedSessionStorage sessionStorage,
+            ProtectedLocalStorage localStorage,
             string controllerName
             ) : base(httpClientFactory.CreateClient("ProjectManagementClient"))
         {
             _controllerName = controllerName;
-            _sessionStorage = sessionStorage;
+            _localStorage = localStorage;
         }
 
         public override async Task<Response<TResponse>> PostAsync<TResponse>(string endpoint, object bodyContent, Dictionary<string, string>? headers = null)
@@ -50,10 +50,10 @@ namespace ProjectManagement.Clients
                 headers = new Dictionary<string, string>();
             if (!headers.ContainsKey("Authorization"))
             {
-                var sessionEntry = await _sessionStorage.GetAsync<string>("AuthToken");
-                if(sessionEntry.Success && sessionEntry.Value != null)
+                var storageEntry = await _localStorage.GetAsync<string>("AuthToken");
+                if(storageEntry.Success && storageEntry.Value != null)
                 {
-                    headers.Add("Authorization", $"Bearer {sessionEntry.Value}");
+                    headers.Add("Authorization", $"Bearer {storageEntry.Value}");
                 }
             }
             return headers;

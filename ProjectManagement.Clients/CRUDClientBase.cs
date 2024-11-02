@@ -7,8 +7,8 @@ namespace ProjectManagement.Clients
     {
         public CRUDClientBase(
             IHttpClientFactory httpClientFactory,
-            ProtectedSessionStorage sessionStorage
-            ) : base(httpClientFactory, sessionStorage){}
+            ProtectedLocalStorage localStorage
+            ) : base(httpClientFactory, localStorage){}
 
         public async Task<Response<List<TViewModel>>> GetAll()
         {

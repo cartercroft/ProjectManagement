@@ -4,44 +4,33 @@ using ProjectManagement.Classes;
 using ProjectManagement.Clients;
 using ProjectManagement.Public.Models.Auth;
 using ProjectManagement.UI.Components.Auth;
+using System.Security.Claims;
 
 namespace ProjectManagement.UI
 {
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider, ILoginManager
     {
-        private AuthenticationState _authenticationState;
-        private AuthClient _authClient;
-        private AuthService _authService;
-        public CustomAuthenticationStateProvider(AuthService authService, AuthClient authClient)
+        private readonly AuthClient _authClient;
+        private readonly ProtectedLocalStorage _localStorage;
+        public CustomAuthenticationStateProvider(AuthClient authClient, ProtectedLocalStorage localStorage) : base()
         {
             _authClient = authClient;
-            _authenticationState = new AuthenticationState(authService.CurrentUser);
-            _authService = authService;
-
-            authService.UserChanged += (newUser) =>
-            {
-                AuthenticationState = new AuthenticationState(newUser);
-            };
+            _localStorage = localStorage;
         }
-        private AuthenticationState AuthenticationState { 
-            get { return _authenticationState; }
-            set
-            {
-                _authenticationState = value;
-                NotifyAuthenticationStateChanged(Task.FromResult(_authenticationState));
-            }
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+        {
+            var token = (await _localStorage.GetAsync<string>("AuthToken")).Value;
+            var principal = JWTHelper.GetClaimsPrincipalFromToken(token, "jwt");
+            return new AuthenticationState(principal);
         }
-        public override Task<AuthenticationState> GetAuthenticationStateAsync() =>
-            Task.FromResult(_authenticationState);
         public async Task<bool> Login(string email, string password)
         {
             var response = await _authClient.SignIn(email, password);
-            if(response != null 
-                && response.ClaimsPrincipal != null)
+            if (response?.ClaimsPrincipal != null
+               && !string.IsNullOrEmpty(response?.TokenInformation?.AuthToken))
             {
-                _authService.CurrentUser = response.ClaimsPrincipal;
-                AuthenticationState = new AuthenticationState(_authService.CurrentUser);
-                
+                await _localStorage.SetAsync("AuthToken", response.TokenInformation.AuthToken);
+                NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
                 return true;
             }
             return false;
@@ -50,15 +39,12 @@ namespace ProjectManagement.UI
         {
             return await _authClient.Register(model);
         }
-
         public async Task Logout()
         {
             Response response = await _authClient.Logout();
             if (response.IsSuccess)
             {
-                _authService.CurrentUser = new System.Security.Claims.ClaimsPrincipal();
-                AuthenticationState = new AuthenticationState(_authService.CurrentUser);
-                NotifyAuthenticationStateChanged(Task.FromResult(AuthenticationState));
+                await _localStorage.DeleteAsync("AuthToken");
             }
             else 
             {

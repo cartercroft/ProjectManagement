@@ -1,5 +1,5 @@
 ﻿@inherits ProjectManagementComponentBase
-@inject ILoginManager _loginManager
+@* @inject ILoginManager _loginManager *@
 @inject NavigationManager _navManager
 
     <AuthorizeView>
@@ -7,15 +7,15 @@
 
         </NotAuthorized>
         <Authorized>
-            <button @onclick="HandleLogoutClick">Log Out</button>
+            @* <button @onclick="HandleLogoutClick">Log Out</button> *@
         </Authorized>
     </AuthorizeView>
 
 @code{
-    protected async Task HandleLogoutClick() {
-        ShowInfo("Logging out...");
-        await _loginManager.Logout();
-        ShowInfo("Logged out!");
-        _navManager.NavigateTo("/");
-    }   
+    // protected async Task HandleLogoutClick() {
+    //     ShowInfo("Logging out...");
+    //     await _loginManager.Logout();
+    //     ShowInfo("Logged out!");
+    //     _navManager.NavigateTo("/");
+    // }   
 }

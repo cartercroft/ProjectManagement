@@ -10,6 +10,7 @@ using ProjectManagement.Classes;
 using System.Text;
 using ProjectManagement.API.Services;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,12 +21,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<ProjectManagementContext>(opt => 
     opt.UseSqlServer(builder.Configuration.GetConnectionString("ProjectManagement"), b => b.MigrationsAssembly("ProjectManagement.EF"))
-.EnableSensitiveDataLogging()
-    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking),
+        .EnableSensitiveDataLogging()
+        .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking),
     contextLifetime: ServiceLifetime.Scoped
 );
 
-builder.Services.AddIdentity<User, Role>()
+builder.Services.AddDefaultIdentity<User>()
+                .AddRoles<Role>()
                 .AddEntityFrameworkStores<ProjectManagementContext>()
                 .AddDefaultTokenProviders();
 
@@ -36,7 +38,7 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-    .AddJwtBearer(options =>
+.AddJwtBearer(options =>
 {
     options.SaveToken = true;
     options.RequireHttpsMetadata = false;

@@ -1,25 +1,22 @@
 ﻿
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using Microsoft.AspNetCore.Http;
 using ProjectManagement.Classes;
 using ProjectManagement.Public.Models;
 using ProjectManagement.Public.Models.Auth;
-using System.Runtime.CompilerServices;
-using System.Security.Claims;
 
 namespace ProjectManagement.Clients
 {
     public class AuthClient : ProjectManagementClientBase
     {
         private readonly AuthService _authService;
-        private ProtectedSessionStorage _session;
+        private ProtectedLocalStorage _localStorage;
 
         public AuthClient(IHttpClientFactory httpClientFactory,
             AuthService authService,
-            ProtectedSessionStorage session) : base(httpClientFactory, session)
+            ProtectedLocalStorage localStorage) : base(httpClientFactory, localStorage)
         {
             _authService = authService;
-            _session = session;
+            _localStorage = localStorage;
         }
         public async Task<SignInResultModel> SignIn(string email, string password)
         {
@@ -37,14 +34,12 @@ namespace ProjectManagement.Clients
 
             JWTResponse? jwtResponse = response.Result;
 
-            await _session.SetAsync("AuthToken", jwtResponse.AuthToken);
-
-            var securityToken = JWTHelper.GetTokenFromString(jwtResponse.AuthToken);
-            result.ClaimsPrincipal = new ClaimsPrincipal(
-            new ClaimsIdentity(securityToken?
-            .Claims
-            .Select(c => new Claim(c.Type, c.Value))
-            .ToList(), "Default"));
+            if (jwtResponse != null
+                && !string.IsNullOrEmpty(jwtResponse.AuthToken))
+            {
+                result.TokenInformation = jwtResponse;
+                result.ClaimsPrincipal = JWTHelper.GetClaimsPrincipalFromToken(jwtResponse.AuthToken, "Default");
+            }
 
             return result;
         }
