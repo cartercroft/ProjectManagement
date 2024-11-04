@@ -13,7 +13,6 @@
 else
 {
     <div style="padding: 10px;" @key=@(Projects.Count)>
-        <a href="/Roles">Roles</a>
         <TypedTabDisplay TTabItem="ProjectViewModel" EnableAdding OnAddAsync="HandleOpenProjectEdit" EnableDelete OnDeleteAsync="HandleDeleteDialogOpen">
             @foreach (var project in Projects)
             {

@@ -1,4 +1,5 @@
 ﻿@namespace ProjectManagement.UI.Components.Shared
+@using System.Security.Claims
 @inherits ProjectManagementComponentBase
 
 <AuthorizeView>
@@ -12,4 +13,8 @@
 
 @code{
 
+    protected override async Task OnInitializedAsync() 
+    {
+        await base.OnInitializedAsync();
+    }
 }

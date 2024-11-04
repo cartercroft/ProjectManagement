@@ -1,21 +1,33 @@
-﻿@inherits ProjectManagementComponentBase
-@* @inject ILoginManager _loginManager *@
+﻿@inherits AuthorizedComponentBase
+@inject AuthenticationStateProvider _authStateProvider
 @inject NavigationManager _navManager
 
-    <AuthorizeView>
-        <NotAuthorized>
 
-        </NotAuthorized>
-        <Authorized>
-            @* <button @onclick="HandleLogoutClick">Log Out</button> *@
-        </Authorized>
-    </AuthorizeView>
+    <Dropdown>
+        <Items>
+            <AuthorizeView Roles="Admin">
+                <DropdownItem>
+                    <a href="/Roles">Manage Roles</a>
+                </DropdownItem>
+            </AuthorizeView>
+            <AuthorizeView>
+                <Authorized>
+                    <DropdownItem>
+                        <p>Hello @(context.User.Identity.Name)!</p>
+                    </DropdownItem>
+                    <DropdownItem>
+                        <button @onclick="HandleLogoutClick">Log Out</button>
+                    </DropdownItem>
+                </Authorized>
+            </AuthorizeView>
+        </Items>
+    </Dropdown>
 
 @code{
-    // protected async Task HandleLogoutClick() {
-    //     ShowInfo("Logging out...");
-    //     await _loginManager.Logout();
-    //     ShowInfo("Logged out!");
-    //     _navManager.NavigateTo("/");
-    // }   
+    protected async Task HandleLogoutClick() {
+        ShowInfo("Logging out...");
+        await ((CustomAuthenticationStateProvider)_authStateProvider).Logout();
+        ShowInfo("Logged out!");
+        _navManager.NavigateTo("/");
+    }   
 }

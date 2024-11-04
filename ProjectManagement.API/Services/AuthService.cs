@@ -71,6 +71,7 @@ namespace ProjectManagement.API.Services
             {
                new Claim(ClaimTypes.Name, user.Email),
                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+               new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
 
             foreach (var userRole in userRoles)
@@ -116,7 +117,7 @@ namespace ProjectManagement.API.Services
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+            JwtSecurityToken token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
     }

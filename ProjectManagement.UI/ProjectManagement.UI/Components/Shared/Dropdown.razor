@@ -1,0 +1,23 @@
+﻿<button @onclick="ToggleOpen">
+    Dropdown
+</button>
+@if (Opened)
+{
+    <ul class="dropdown">
+        @Items
+    </ul>
+}
+@code {
+    [Parameter]
+    public RenderFragment? Items { get; set; }
+    [Parameter]
+    public bool Opened { get; set; } = false;
+    [Parameter]
+    public EventCallback<bool> OpenedChanged { get; set; }
+
+    private async Task ToggleOpen()
+    {
+        Opened = !Opened;
+        await OpenedChanged.InvokeAsync(Opened);
+    }
+}

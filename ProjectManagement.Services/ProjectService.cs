@@ -20,5 +20,15 @@ namespace ProjectManagement.Services
             _taskService = taskService;
             _projectRepository = projectRepository;
         }
+        public override ProjectViewModel Save(ProjectViewModel viewModel)
+        {
+            throw new NotImplementedException("Use Project.Save(ProjectViewModel viewModel, User user) instead.");
+        }
+        public ProjectViewModel Save(ProjectViewModel viewModel, Guid userId)
+        {
+            Project dataModel = _mapper.Map<Project>(viewModel);
+            dataModel.UserId = userId;
+            return _mapper.Map<ProjectViewModel>(_projectRepository.Save(dataModel));
+        }
     }
 }

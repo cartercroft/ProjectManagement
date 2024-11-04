@@ -40,4 +40,12 @@
     <None Include="Components\Shared\TypedTabPage.razor" />
   </ItemGroup>
 
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Shared\DropdownItem.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="components\shared\DropdownMenu.razor.scss" />
+  </ItemGroup>
+
 </Project>

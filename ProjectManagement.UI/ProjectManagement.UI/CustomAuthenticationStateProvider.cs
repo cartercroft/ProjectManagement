@@ -20,6 +20,12 @@ namespace ProjectManagement.UI
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var token = (await _localStorage.GetAsync<string>("AuthToken")).Value;
+
+            if(await HandleTokenIfExpired(token))
+            {
+                return new AuthenticationState(new ClaimsPrincipal());
+            }
+
             var principal = JWTHelper.GetClaimsPrincipalFromToken(token, "jwt");
             return new AuthenticationState(principal);
         }
@@ -41,15 +47,24 @@ namespace ProjectManagement.UI
         }
         public async Task Logout()
         {
-            Response response = await _authClient.Logout();
-            if (response.IsSuccess)
+            //TODO: May need to implement some sort of token 'blacklist' that tokens get added to upon logout to prevent sessions from persisting past when a user needs them.
+            await _localStorage.DeleteAsync("AuthToken");
+            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+        }
+        /// <summary>
+        ///  Checkes whether or not a token is expired.
+        /// </summary>
+        /// <param name="token">The JWT token.</param>
+        /// <returns>A flag indicating whether or not the token has expired. True = Token has expired, False = Token is still valid.</returns>
+        private async Task<bool> HandleTokenIfExpired(string? token)
+        {
+            if (token is not null && !JWTHelper.CheckTokenIsValid(token))
             {
                 await _localStorage.DeleteAsync("AuthToken");
+                NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+                return true;
             }
-            else 
-            {
-                //TODO: Logging
-            }
+            return false;
         }
     }
 }
