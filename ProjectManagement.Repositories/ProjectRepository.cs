@@ -16,6 +16,10 @@ namespace ProjectManagement.Repositories
         protected override List<Expression<Func<Project, object>>> AlwaysInclude => new()
         {
             p => p.Tasks
-        }; 
+        };
+        public List<Project> GetAllProjectsForUser(Guid userId)
+        {
+            return GetAll().FindAll(x => x.UserId == userId);
+        }
     }
 }

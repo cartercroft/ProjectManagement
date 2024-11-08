@@ -8,8 +8,8 @@ namespace ProjectManagement.Models
     {
         [Required]
         public string Name { get; set; } = null!;
+        [ForeignKey("User")]
         public Guid UserId { get; set; }
-        [ForeignKey("UserId")]
         public virtual User User { get; set; }
         public virtual List<ProjectTask> Tasks { get; set; } = new List<ProjectTask>();
     }

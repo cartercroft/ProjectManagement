@@ -13,6 +13,7 @@ namespace ProjectManagement.Clients
         {
             _client = client;
         }
+        protected HttpClient Client => _client;
         public virtual async Task<Response> PostAsync(string endpoint, object bodyContent, Dictionary<string, string>? headers = null)
         {
             HttpRequestMessage request = GetHttpRequestForPost(bodyContent, endpoint, headers);

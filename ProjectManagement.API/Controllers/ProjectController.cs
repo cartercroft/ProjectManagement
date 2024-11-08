@@ -1,5 +1,7 @@
 ﻿using DataLayerAbstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Models;
 using ProjectManagement.Public.Models;
 using ProjectManagement.Repositories;
@@ -20,6 +22,18 @@ namespace ProjectManagement.API.Controllers
         {
             var userIdString = _userManager.GetUserId(HttpContext.User);
             return _projectService.Save(viewModel, Guid.Parse(userIdString));
+        }
+        [Authorize(Roles = "Admin")]
+        public override IEnumerable<ProjectViewModel> GetAll()
+        {
+            return base.GetAll();
+        }
+        [Authorize]
+        [HttpGet]
+        public List<ProjectViewModel> GetProjectsForCurrentUser()
+        {
+            var userIdString = _userManager.GetUserId(HttpContext.User);
+            return _projectService.GetProjectsForUser(Guid.Parse(userIdString));
         }
     }
 }

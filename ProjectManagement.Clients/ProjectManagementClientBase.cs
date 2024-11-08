@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using ProjectManagement.Classes;
+using System.Net.Http.Headers;
 
 namespace ProjectManagement.Clients
 {
@@ -7,12 +8,13 @@ namespace ProjectManagement.Clients
     {
         private string _controllerName = null!;
         private readonly ProtectedLocalStorage _localStorage = null!;
+        private bool _headersInitialized = false;
         public ProjectManagementClientBase(
             IHttpClientFactory httpClientFactory,
             ProtectedLocalStorage localStorage
             ) : base(httpClientFactory.CreateClient("ProjectManagementClient"))
         {
-            _localStorage = localStorage;
+            _localStorage = localStorage;   
         }
         public ProjectManagementClientBase(
             IHttpClientFactory httpClientFactory,
@@ -26,13 +28,21 @@ namespace ProjectManagement.Clients
 
         public override async Task<Response<TResponse>> PostAsync<TResponse>(string endpoint, object bodyContent, Dictionary<string, string>? headers = null)
         {
+            //await InitializeHeadersIfNecessary();
             headers = await AddAuthToken(headers);
             return await base.PostAsync<TResponse>(GetEndpointWithControllerName(endpoint), bodyContent, headers);
         }
         public override async Task<Response<TResponse>> GetAsync<TResponse>(string endpoint, Dictionary<string, object>? pathParameters = null, Dictionary<string, string>? headers = null)
         {
+            //await InitializeHeadersIfNecessary();
             headers = await AddAuthToken(headers);
             return await base.GetAsync<TResponse>(GetEndpointWithControllerName(endpoint), pathParameters, headers);
+        }
+        public override async Task<Response> PostAsync(string endpoint, object bodyContent, Dictionary<string, string>? headers = null)
+        {
+            //await InitializeHeadersIfNecessary();
+            headers = await AddAuthToken(headers);
+            return await base.PostAsync(GetEndpointWithControllerName(endpoint), bodyContent, headers);
         }
         private string GetRuntimeClassName()
         {
@@ -44,14 +54,14 @@ namespace ProjectManagement.Clients
                 _controllerName = GetRuntimeClassName().Replace("Client", "");
             return _controllerName;
         }
-        private async Task<Dictionary<string,string>?> AddAuthToken(Dictionary<string, string>? headers)
+        private async Task<Dictionary<string, string>?> AddAuthToken(Dictionary<string, string>? headers)
         {
             if (headers == null)
                 headers = new Dictionary<string, string>();
             if (!headers.ContainsKey("Authorization"))
             {
                 var storageEntry = await _localStorage.GetAsync<string>("AuthToken");
-                if(storageEntry.Success && storageEntry.Value != null)
+                if (storageEntry.Success && storageEntry.Value != null)
                 {
                     headers.Add("Authorization", $"Bearer {storageEntry.Value}");
                 }
@@ -63,5 +73,17 @@ namespace ProjectManagement.Clients
             string controllerName = GetControllerName();
             return $"{(!string.IsNullOrEmpty(controllerName) ? $"{controllerName}/{endpoint}" : endpoint)}";
         }
+        //private async Task InitializeHeadersIfNecessary()
+        //{
+        //    if (!_headersInitialized)
+        //    {
+        //        ProtectedBrowserStorageResult<string> tokenEntry = await _localStorage.GetAsync<string>("AuthToken");
+        //        if(tokenEntry.Success && tokenEntry.Value != null)
+        //        {
+        //            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenEntry.Value);
+        //            _headersInitialized = true;
+        //        }
+        //    }
+        //}
     }
 }

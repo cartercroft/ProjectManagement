@@ -18,15 +18,9 @@ namespace ProjectManagement.Clients
             _authService = authService;
             _localStorage = localStorage;
         }
-        public async Task<SignInResultModel> SignIn(string email, string password)
+        public async Task<SignInResultModel> SignIn(LoginModel loginModel)
         {
             var result = new SignInResultModel();
-
-            LoginModel loginModel = new LoginModel
-            {
-                Username = email,
-                Password = password
-            };
 
             var response = await PostAsync<JWTResponse>("login", loginModel);
             if(!response.IsSuccess || response.Result == null)
@@ -43,7 +37,7 @@ namespace ProjectManagement.Clients
 
             return result;
         }
-        public async Task<Response> Register(RegisterRequestModel model)
+        public async Task<Response> Register(LoginModel model)
         {
             return await PostAsync("Register", model);
         }

@@ -396,3 +396,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/ProjectManagement.EF/Migrations/20241105024331_userProjects.Designer.cs

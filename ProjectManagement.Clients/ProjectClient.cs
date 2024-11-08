@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using ProjectManagement.Classes;
 using ProjectManagement.Public.Models;
 
 namespace ProjectManagement.Clients
@@ -9,5 +10,10 @@ namespace ProjectManagement.Clients
             IHttpClientFactory httpClientFactory,
             ProtectedLocalStorage localStorage
             ) : base(httpClientFactory, localStorage){}
+
+        public async Task<Response<List<ProjectViewModel>>> GetProjectsForCurrentUser()
+        {
+            return await GetAsync<List<ProjectViewModel>>("GetProjectsForCurrentUser");
+        }
     }
 }

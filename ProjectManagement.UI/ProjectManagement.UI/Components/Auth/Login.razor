@@ -1,10 +1,12 @@
 ﻿@page "/Login"
 @using ProjectManagement.Classes
+@using ProjectManagement.Public.Models.Auth
 @inherits ProjectManagementComponentBase
 @inject AuthenticationStateProvider _authStateProvider
 @inject NavigationManager _navManager
 <div class="login-wrapper">
-    <form class="login-form" @onsubmit=@(HandleLogin)>
+    <form class="login-form" @onsubmit=@(HandleSubmit)>
+        <h3>@(_isRegistering ? "Create your account!" : "Log In")</h3>
         <div>
             <label>
                 Email:
@@ -17,27 +19,62 @@
             </label>
             <InputText @bind-Value=@(_loginModel.Password) AdditionalAttributes=@(new Dictionary<string, object>(){["type"] = "password"}) />
         </div>
-        <button type="submit">Log In</button>
-        <button type="button" @onclick=@(NavigateToRegister)>Register</button>
+        <button type="submit">@(_isRegistering ? "Submit" : "Log In")</button>
+        @if(!_isRegistering)
+        {
+            <button type="button" @onclick=@(HandleRegisterClick)>Register</button>
+            <button class="no-style " @onclick=@(HandleBackToLoginClick)></button>
+        }
     </form>
 </div>
 
 @code{
-    private class UserLoginModel {
-        public string Username { get; set; }
-        public string Password { get; set; }
-    }
-    private UserLoginModel _loginModel;
-
+    private LoginModel _loginModel = new();
+    private bool _isRegistering = false;
     protected override async Task OnInitializedAsync()
     {
         _loginModel = new();
         await base.OnInitializedAsync();
     }
-    private async Task HandleLogin(EventArgs args)
+    private async Task HandleSubmit(EventArgs args)
+    {
+        if(_isRegistering)
+        {
+            await HandleRegister();
+        }
+        else
+        {
+            await HandleLogin();
+        }
+    }
+    private async Task HandleLoginClick(MouseEventArgs args)
+    {
+        await HandleSubmit(args);
+    }
+    private void HandleRegisterClick(MouseEventArgs args)
+    {
+        _isRegistering = true;
+    }
+    private void HandleBackToLoginClick(MouseEventArgs args)
+    {
+        _isRegistering = false;
+    }
+    private async Task HandleRegister() 
+    {
+        var response = await ((ILoginManager)_authStateProvider).Register(_loginModel);
+        if(response.IsSuccess)
+        {
+            ShowSuccess("Successfully registered!");
+        }
+        else
+        {
+            HandleError($"Error registering: {response.ErrorMessage}");
+        }
+    }
+    private async Task HandleLogin() 
     {
         ShowInfo("Logging in...");
-        bool isLoginSuccess = await ((ILoginManager)_authStateProvider).Login(_loginModel.Username, _loginModel.Password);
+        bool isLoginSuccess = await ((ILoginManager)_authStateProvider).Login(_loginModel);
         if (isLoginSuccess)
         {
             ShowSuccess("Logged in!");
@@ -47,13 +84,5 @@
         {
             ShowWarning("Invalid username or password.");
         }
-    }
-    private async Task HandleLoginClick(MouseEventArgs args)
-    {
-        await HandleLogin(args);
-    }
-    private void NavigateToRegister(MouseEventArgs args)
-    {
-        _navManager.NavigateTo("/Register");
     }
 }

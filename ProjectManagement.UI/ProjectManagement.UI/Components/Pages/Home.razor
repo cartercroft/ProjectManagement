@@ -6,23 +6,27 @@
 
 <PageTitle>My Projects</PageTitle>
 
-@if (_isLoading)
-{
-    <p>Loading...</p>
-}
-else
-{
-    <div style="padding: 10px;" @key=@(Projects.Count)>
-        <TypedTabDisplay TTabItem="ProjectViewModel" EnableAdding OnAddAsync="HandleOpenProjectEdit" EnableDelete OnDeleteAsync="HandleDeleteDialogOpen">
-            @foreach (var project in Projects)
-            {
-                <TypedTabPage TabItem="project" Text="@project.Name">
-                    <ProjectEdit Project="@project" SaveCallback="HandleProjectEdit"></ProjectEdit>
-                </TypedTabPage>
-            }
-        </TypedTabDisplay>
-    </div>
-}
+<AuthorizeView>
+    <Authorized>
+        @if (_isLoading)
+        {
+            <p>Loading...</p>
+        }
+        else
+        {
+            <div style="padding: 10px;" @key=@(Projects.Count)>
+                <TypedTabDisplay TTabItem="ProjectViewModel" EnableAdding OnAddAsync="HandleOpenProjectEdit" EnableDelete OnDeleteAsync="HandleDeleteDialogOpen">
+                    @foreach (var project in Projects)
+                    {
+                        <TypedTabPage TabItem="project" Text="@project.Name">
+                            <ProjectEdit Project="@project" SaveCallback="HandleProjectEdit"></ProjectEdit>
+                        </TypedTabPage>
+                    }
+                </TypedTabDisplay>
+            </div>
+        }
+    </Authorized>
+</AuthorizeView>
 
 <ProjectAddDialog @bind-Opened=@(_editDialogOpened) SaveCallback="HandleProjectAdd"></ProjectAddDialog>
 <ProjectDeleteDialog Project="@_projectToDelete" @bind-Opened=@(_deleteDialogOpened) DeleteCallback="HandleProjectDelete"></ProjectDeleteDialog>
@@ -43,7 +47,7 @@ else
     private async Task GetProjects()
     {
         _isLoading = true;
-        var result = await _projectClient.GetAll();
+        var result = await _projectClient.GetProjectsForCurrentUser();
         if (result.IsSuccess)
         {
             Projects = result.Result ?? new List<ProjectViewModel>();

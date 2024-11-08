@@ -29,9 +29,9 @@ namespace ProjectManagement.UI
             var principal = JWTHelper.GetClaimsPrincipalFromToken(token, "jwt");
             return new AuthenticationState(principal);
         }
-        public async Task<bool> Login(string email, string password)
+        public async Task<bool> Login(LoginModel loginModel)
         {
-            var response = await _authClient.SignIn(email, password);
+            var response = await _authClient.SignIn(loginModel);
             if (response?.ClaimsPrincipal != null
                && !string.IsNullOrEmpty(response?.TokenInformation?.AuthToken))
             {
@@ -41,7 +41,7 @@ namespace ProjectManagement.UI
             }
             return false;
         }
-        public async Task<Response> Register(RegisterRequestModel model)
+        public async Task<Response> Register(LoginModel model)
         {
             return await _authClient.Register(model);
         }

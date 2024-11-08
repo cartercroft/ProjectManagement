@@ -24,7 +24,7 @@ namespace ProjectManagement.API.Controllers
         }
 
         [HttpPost]
-        public async Task Register(RegisterRequestModel requestModel)
+        public async Task Register(LoginModel requestModel)
         {
             await _authService.Register(requestModel);
         }

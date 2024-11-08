@@ -30,5 +30,10 @@ namespace ProjectManagement.Services
             dataModel.UserId = userId;
             return _mapper.Map<ProjectViewModel>(_projectRepository.Save(dataModel));
         }
+        
+        public List<ProjectViewModel> GetProjectsForUser(Guid userId)
+        {
+            return _mapper.Map<List<ProjectViewModel>>(_projectRepository.GetAllProjectsForUser(userId));
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace ProjectManagement.API.Services
     //https://ravindradevrani.medium.com/net-7-jwt-authentication-and-role-based-authorization-5e5e56979b67
     public interface IAuthService
     {
-        Task<Response> Register(RegisterRequestModel model);
+        Task<Response> Register(LoginModel model);
         Task<JWTResponse> Login(LoginModel model);
         Task AddUserToRole(string email, string role);
     }
@@ -29,10 +29,10 @@ namespace ProjectManagement.API.Services
             _configuration = configuration;
 
         }
-        public async Task<Response> Register(RegisterRequestModel model)
+        public async Task<Response> Register(LoginModel model)
         {
             Response response = new Response();
-            var userExists = await _userManager.FindByEmailAsync(model.Email);
+            var userExists = await _userManager.FindByEmailAsync(model.Username);
             if (userExists != null)
             {
                 response.ErrorMessage = "A user with that email already exists.";
@@ -41,9 +41,9 @@ namespace ProjectManagement.API.Services
 
             User user = new User()
             {
-                Email = model.Email,
+                Email = model.Username,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Email
+                UserName = model.Username
             };
 
             var createUserResult = await _userManager.CreateAsync(user, model.Password);
