@@ -1,5 +1,5 @@
-﻿using ProjectManagement.Public.Models.Auth;
-using System.Security.Claims;
+﻿using LayerAbstractions;
+using ProjectManagement.Public.Models.Auth;
 
 namespace ProjectManagement.Classes
 {

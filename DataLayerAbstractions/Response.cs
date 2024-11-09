@@ -1,4 +1,4 @@
-﻿namespace ProjectManagement.Classes
+﻿namespace LayerAbstractions
 {
     public class Response<T> : Response
     {
